@@ -1,0 +1,4 @@
+{
+  "port": 8080,
+  "mongoUri": "mongodb://uc4cbefg4tvk28jdcnrn:Ne2BNFjtcZ11Q6buEX0z@n1-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017,n2-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017/b9wuehdksgntd5g?replicaSet=rs0"
+}

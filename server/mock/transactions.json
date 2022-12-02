@@ -1,0 +1,30 @@
+[
+  {
+    "amount": "1000",
+    "categoryID": "638756ba505183a794c06bc6",
+    "type": "Расход",
+    "bankAccountsID": ["63879967c9f3b58b42840edf"],
+    "comment": "Комментарии для расхода"
+  },
+  {
+    "amount": "5000",
+    "categoryID": "638756ba505183a794c06bc6",
+    "type": "Перевод",
+    "bankAccountsID": ["63879967c9f3b58b42840edf", "63879967c9f3b58b42840ee0"],
+    "comment": "Комментарии для перевода"
+  },
+  {
+    "amount": "80000",
+    "categoryID": "638756ba505183a794c06bc3",
+    "type": "Доход",
+    "bankAccountsID": ["63879967c9f3b58b42840edf"],
+    "comment": "Комментарии для дохода"
+  },
+  {
+    "amount": "5459",
+    "categoryID": "638756ba505183a794c06bc3",
+    "type": "Доход",
+    "bankAccountsID": ["63879967c9f3b58b42840ee0"],
+    "comment": "Комментарии для дохода"
+  }
+]
