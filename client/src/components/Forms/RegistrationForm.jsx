@@ -5,7 +5,7 @@ import StyledTextField from "../common/form/styled/StyledTextField"
 
 const LoginForm = ({ onSubmite }) => {
     const initialValues = {
-        name: "",
+        username: "",
         email: "",
         password: ""
     }
@@ -14,7 +14,7 @@ const LoginForm = ({ onSubmite }) => {
     const [usingField, setUsingField] = useState({login: false, password: false})
 
     const validatorConfig = {
-        name: {
+        username: {
           isRequired: {
               message: 'Поле обязательно для заполнения'
           }
@@ -65,13 +65,13 @@ const LoginForm = ({ onSubmite }) => {
     return (
         <form onSubmit={handleSubmite}>
             <StyledTextField
-                name="name"
+                name="username"
                 label="Ваше имя"
                 icon={[UserIcon]}
                 placeholder="Иван"
-                value={data.email}
-                error={errors.email}
-                using={usingField.email}
+                value={data.username}
+                error={errors.username}
+                using={usingField.username}
                 onChange={handleChange}
                 onBlur={handleToucheField}
             />

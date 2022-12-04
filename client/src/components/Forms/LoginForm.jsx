@@ -5,7 +5,7 @@ import StyledTextField from "../common/form/styled/StyledTextField"
 
 const LoginForm = ({ onSubmite }) => {
     const initialValues = {
-        login: "",
+        email: "",
         password: ""
     }
     const [data, setData] = useState(initialValues)
@@ -59,13 +59,13 @@ const LoginForm = ({ onSubmite }) => {
     return (
         <form onSubmit={handleSubmite}>
             <StyledTextField
-                name="login"
-                label="Логин"
+                name="email"
+                label="Email"
                 icon={[UserIcon]}
-                placeholder="Логин"
-                value={data.login}
-                error={errors.login}
-                using={usingField.login}
+                placeholder="example@mail.ru"
+                value={data.email}
+                error={errors.email}
+                using={usingField.email}
                 onChange={handleChange}
                 onBlur={handleToucheField}
             />

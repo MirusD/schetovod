@@ -39,7 +39,7 @@ const NavBar = ({ className }) => {
                     <Menu className="border-l-2">
                         <Menu.Button>
                             <NavBarAvatar src={user.avatar || userPlaceholder}/>
-                            {user.name}
+                            {user.username}
                         </Menu.Button>
                         <Menu.Items>
                             <Menu.Item>

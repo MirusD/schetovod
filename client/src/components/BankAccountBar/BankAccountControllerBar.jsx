@@ -1,7 +1,7 @@
-import React, {useState} from 'react'
+import React from 'react'
 import Tooltip from '@mui/material/Tooltip'
 import { createTheme } from '@mui/material/styles'
-import {ThemeProvider} from "@mui/material"
+import { ThemeProvider } from "@mui/material"
 import {
     PlusIcon,
     MinusIcon,
@@ -11,13 +11,10 @@ import {
     ArrowTrendingUpIcon,
     WrenchIcon
 } from "@heroicons/react/24/outline"
-import Modal from "../Modal";
-import NewProfitForm from "../Forms/NewProfitForm"
-import NewExpenseForm from "../Forms/NewExpenseForm"
-import NewTransferForm from "../Forms/NewTransferForm"
-import NewLendForm from "../Forms/NewLendForm"
-import {useDispatch, useSelector} from "react-redux"
-import {getCurrentOpenModal, setCurrentOpenModal} from "../../store/modalControllerSlice";
+import { useDispatch } from "react-redux"
+import { setCurrentOpenModal } from "../../store/modalControllerSlice"
+import { useParams } from "react-router-dom"
+import { removeBankAccount } from "../../store/bankAccountsSlice"
 
 const theme = createTheme({
     typography: {
@@ -26,9 +23,13 @@ const theme = createTheme({
 });
 
 const BankAccountControllerBar = () => {
+    const { bankAccountId } = useParams()
     const dispatch = useDispatch()
     const handleClick = (name) => {
         dispatch(setCurrentOpenModal(name))
+    }
+    const handleClickRemoveBankAccount = () => {
+        dispatch(removeBankAccount(bankAccountId))
     }
     const styles = "h-14 w-14 bg-green-300 rounded-md text-white flex justify-center items-center hover:bg-green-400 transition"
     return (
@@ -65,7 +66,7 @@ const BankAccountControllerBar = () => {
                     </button>
                 </Tooltip>
                 <Tooltip title="Удалить счет">
-                    <button className={`${styles} bg-red-300 hover:bg-red-400`} onClick={() => handleClick('remove')}>
+                    <button className={`${styles} bg-red-300 hover:bg-red-400`} onClick={() => handleClickRemoveBankAccount()}>
                         <TrashIcon className="h-auto w-10"/>
                     </button>
                 </Tooltip>

@@ -67,7 +67,7 @@ const NewBankAccount = () => {
         e.preventDefault()
         const isValid = validate()
         if (isValid) {
-            dispatch(createBankAccount({...data, _id: String(Date.now())}))
+            dispatch(createBankAccount(data))
             dispatch(setCurrentOpenModal(''))
         }
     }

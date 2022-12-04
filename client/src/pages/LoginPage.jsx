@@ -1,15 +1,16 @@
 import React, { useState } from "react"
 import Card from "../components/Card"
 import { useLocation, useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { login } from "../store/authSlice"
 import LoginForm from "../components/Forms/LoginForm"
 import StyledNavLink from "../components/StyledNavLink"
+import { getMessage } from "../store/messageSlice";
 
 const LoginPage = () => {
     const [loading, setLoading] = useState(false)
     const [successful, setSuccessful] = useState(false)
-    const message = ""
+    const message = useSelector(getMessage())
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const location = useLocation()

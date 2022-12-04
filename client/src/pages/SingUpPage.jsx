@@ -1,15 +1,16 @@
 import React, { useState } from "react"
 import Card from "../components/Card"
 import { useLocation, useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
 import { signUp } from "../store/authSlice"
 import RegistrationForm from "../components/Forms/RegistrationForm"
 import StyledNavLink from "../components/StyledNavLink"
+import { getMessage } from "../store/messageSlice"
 
 const SignUpPage = () => {
     const [loading, setLoading] = useState(false)
     const [successful, setSuccessful] = useState(false)
-    const message = ""
+    const message = useSelector(getMessage())
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -24,6 +25,7 @@ const SignUpPage = () => {
                 navigate("/dashboard", { replace: true })
             })
             .catch(() => {
+                console.log('catch')
                 setSuccessful(false)
             })
             .finally(() => {

@@ -5,6 +5,7 @@ import authReducer from "./authSlice"
 import modalControllerReducer from "./modalControllerSlice"
 import typeBankAccountReducer from "./typeBankAccountsSlice"
 import categoriesReducer from "./categoriesSlice"
+import messageReducer from "./messageSlice";
 
 const rootReducer = combineReducers({
     bankAccounts: bankAccountReducer,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
     transactions: transactionReducer,
     auth: authReducer,
     openModal: modalControllerReducer,
-    categories: categoriesReducer
+    categories: categoriesReducer,
+    message: messageReducer
 })
 
 export function createStore() {

@@ -21,10 +21,10 @@ function App() {
             <Routes>
                 <Route index element={<HomePage/>}/>
                 <Route path="auth" element={<AuthLayout/>}>
-                    {/*<Route index element={<LoginPage/>}/>*/}
+                    <Route index element={<LoginPage/>}/>
                     <Route path="login" element={<LoginPage/>}/>
                     <Route path="signup" element={<SignUpPage/>}/>
-                    {/*<Route path="*" element={<LoginPage/>}/>*/}
+                    <Route path="*" element={<LoginPage/>}/>
                 </Route>
                 <Route path="dashboard/bank-accounts/" element={
                     <ProtectedRoute redirect='/auth/login'>

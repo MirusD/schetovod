@@ -12,7 +12,7 @@ const GeneralStatus = () => {
     const transactions = useSelector(getTransactionsList())
     const bankAccounts = useSelector(getBankAccountsList())
 
-    if (!bankAccounts.length) return "Loading..."
+    if (!bankAccounts.length) return "У вас нет ни одного счёта."
 
     const totalAmount = bankAccounts.reduce((acc, { amount }) => acc + Number(amount), 0)
 

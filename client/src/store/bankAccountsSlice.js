@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import bankAccountService from "../services/bankAccount.service";
+import localStorageService from "../services/localStorage.service";
 
 const initialState = {
     entities: [],
@@ -57,11 +58,19 @@ export const loadBankAccountsList = () => async (dispatch) => {
 }
 
 export const createBankAccount = (payload) => async (dispatch) => {
-    dispatch(bankAccountsRequested())
     try {
-        dispatch(bankAccountCreated(payload))
+        const data =  await bankAccountService.create({...payload, userID: localStorageService.getUserId()})
+        dispatch(bankAccountCreated(data))
     } catch (error) {
         dispatch(bankAccountsRequestedFailed(error.message))
+    }
+}
+
+export const removeBankAccount = (id) => async (dispatch) => {
+    try {
+        await bankAccountService.remove(id)
+        dispatch(bankAccountRemoved({_id: id}))
+    } catch (error) {
     }
 }
 
