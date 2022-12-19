@@ -1,11 +1,11 @@
-import React, {useState} from 'react'
-import StyledTextField from "../common/form/styled/StyledTextField";
-import StyledSelectField from "../common/form/styled/StyledSelectField";
+import React, { useState } from 'react'
+import StyledTextField from '../common/form/styled/StyledTextField'
+import StyledSelectField from '../common/form/styled/StyledSelectField'
 
 const categories = [
-    {label: 'Иван Тупицо', value: '0'},
-    {label: 'Эльвир Ситдиков', value: '1'},
-    {label: 'Алича Шадрина', value: '2'},
+    { label: 'Иван Тупицо', value: '0' },
+    { label: 'Эльвир Ситдиков', value: '1' },
+    { label: 'Алича Шадрина', value: '2' }
 ]
 
 const NewLendForm = () => {

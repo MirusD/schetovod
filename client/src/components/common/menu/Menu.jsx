@@ -1,5 +1,6 @@
-import React, {useState, useEffect, useContext, useRef} from "react"
-import {twMerge} from "tailwind-merge";
+import React, { useState, useEffect, useContext, useRef } from 'react'
+import { twMerge } from 'tailwind-merge'
+import PropTypes from 'prop-types'
 
 const MenuContext = React.createContext()
 
@@ -20,7 +21,7 @@ const MenuProvider = ({ children }) => {
     )
 }
 
-const Menu = ({className, children }) => {
+const Menu = ({ className, children }) => {
     const { openMenu, closeMenu, getStateMenu } = useStateMenu()
     const menu = useRef(null)
 
@@ -28,8 +29,8 @@ const Menu = ({className, children }) => {
         const bodyClickHandler = (e) => {
             e.stopPropagation()
             const { target } = e
-            let its_menu = target === menu.current || menu.current.contains(target)
-            if (!its_menu) closeMenu()
+            const itsMenu = target === menu.current || menu.current.contains(target)
+            if (!itsMenu) closeMenu()
         }
         document.addEventListener('click', bodyClickHandler)
         return () => document.removeEventListener('click', bodyClickHandler)
@@ -38,7 +39,7 @@ const Menu = ({className, children }) => {
     return (
             <div
                 ref={menu}
-                className={twMerge(className, "relative")}
+                className={twMerge(className, 'relative')}
                 onClick={() => getStateMenu() ? closeMenu() : openMenu()} >
                 { children }
             </div>
@@ -46,7 +47,6 @@ const Menu = ({className, children }) => {
 }
 
 const MenuContainer = (props) => {
-
     return (
         <MenuProvider>
             <Menu {...props} />
@@ -87,6 +87,38 @@ const Item = ({ children, ...rest }) => {
             </li>
         </>
     )
+}
+
+Menu.propTypes = {
+    className: PropTypes.string,
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ])
+}
+MenuProvider.propTypes = {
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ])
+}
+Button.propTypes = {
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ])
+}
+Items.propTypes = {
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ])
+}
+Item.propTypes = {
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ])
 }
 
 MenuContainer.Item = Item

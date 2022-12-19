@@ -1,5 +1,6 @@
-import React from "react"
-import { NavLink } from "react-router-dom";
+import React from 'react'
+import { NavLink } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 const NavBarLogo = ({ link, src, label }) => {
     return (
@@ -12,6 +13,12 @@ const NavBarLogo = ({ link, src, label }) => {
             <span className="text-lg text-slate-800 mx-4 font-bold">{label}</span>
         </NavLink>
     )
+}
+
+NavBarLogo.propTypes = {
+    link: PropTypes.string,
+    src: PropTypes.string,
+    label: PropTypes.string
 }
 
 export default NavBarLogo

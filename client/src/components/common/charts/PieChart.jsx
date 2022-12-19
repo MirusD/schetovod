@@ -1,47 +1,16 @@
 import React from 'react'
 import { ResponsivePie } from '@nivo/pie'
+import PropTypes from 'prop-types'
 
-const data = [
-    {
-        "id": "java",
-        "label": "java",
-        "value": 33,
-        "color": "hsl(176, 70%, 50%)"
-    },
-    {
-        "id": "lisp",
-        "label": "lisp",
-        "value": 232,
-        "color": "hsl(94, 70%, 50%)"
-    },
-    {
-        "id": "css",
-        "label": "css",
-        "value": 79,
-        "color": "hsl(143, 70%, 50%)"
-    },
-    {
-        "id": "javascript",
-        "label": "javascript",
-        "value": 575,
-        "color": "hsl(31, 70%, 50%)"
-    },
-    {
-        "id": "erlang",
-        "label": "erlang",
-        "value": 244,
-        "color": "hsl(292, 70%, 50%)"
-    }
-]
-
-const PieChart = () => {
+const PieChart = ({ data = [] }) => {
+    if (!data) return 'Loading...'
     return (
         <ResponsivePie
             data={data}
             margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
             innerRadius={0.5}
-            padAngle={0.7}
-            cornerRadius={3}
+            padAngle={2}
+            cornerRadius={4}
             activeOuterRadiusOffset={8}
             borderWidth={1}
             borderColor={{
@@ -53,7 +22,7 @@ const PieChart = () => {
                     ]
                 ]
             }}
-            arcLinkLabelsSkipAngle={10}
+            arcLinkLabelsSkipAngle={0}
             arcLinkLabelsTextColor="#333333"
             arcLinkLabelsThickness={2}
             arcLinkLabelsColor={{ from: 'color' }}
@@ -139,31 +108,24 @@ const PieChart = () => {
             ]}
             legends={[
                 {
-                    anchor: 'bottom',
-                    direction: 'row',
+                    anchor: 'right',
+                    direction: 'column',
                     justify: false,
                     translateX: 0,
-                    translateY: 56,
-                    itemsSpacing: 0,
-                    itemWidth: 100,
-                    itemHeight: 18,
-                    itemTextColor: '#999',
-                    itemDirection: 'left-to-right',
-                    itemOpacity: 1,
-                    symbolSize: 18,
-                    symbolShape: 'circle',
-                    effects: [
-                        {
-                            on: 'hover',
-                            style: {
-                                itemTextColor: '#000'
-                            }
-                        }
-                    ]
+                    translateY: 0,
+                    itemWidth: 300,
+                    itemHeight: 34,
+                    itemsSpacing: 1,
+                    symbolSize: 20,
+                    itemDirection: 'left-to-right'
                 }
             ]}
         />
     )
+}
+
+PieChart.propTypes = {
+    data: PropTypes.array
 }
 
 export default PieChart

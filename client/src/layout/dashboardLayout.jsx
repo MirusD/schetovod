@@ -1,21 +1,22 @@
 import React, { useEffect } from 'react'
-import { Outlet } from "react-router-dom"
-import BankAccountsBar from "../components/BankAccountBar/BankAccountsBar"
-import Modals from "../components/Modals"
-import { loadBankAccountsList } from "../store/bankAccountsSlice"
-import { loadTypeBankAccountsList } from "../store/typeBankAccountsSlice"
-import { loadCategoriesList } from "../store/categoriesSlice"
-import {useDispatch} from "react-redux";
-import {loadTransactionsList} from "../store/transactionsSlice";
+import { Outlet } from 'react-router-dom'
+import BankAccountsBar from '../components/BankAccountBar/BankAccountsBar'
+import Modals from '../components/Modals'
+import { getBankAccounts } from '../store/bankAccountsSlice'
+import { loadTypeBankAccountsList } from '../store/typeBankAccountsSlice'
+import { loadCategoriesList } from '../store/categoriesSlice'
+import { useDispatch } from 'react-redux'
+import { getTransactions } from '../store/transactionsSlice'
+import { getBankAccountGroups } from '../store/bankAccountGroupsSlice'
 
 const DashboardLayout = () => {
-
     const dispatch = useDispatch()
     useEffect(() => {
-        dispatch(loadBankAccountsList())
+        dispatch(getBankAccounts())
+        dispatch(getBankAccountGroups())
         dispatch(loadTypeBankAccountsList())
         dispatch(loadCategoriesList())
-        dispatch(loadTransactionsList())
+        dispatch(getTransactions())
     }, [])
 
     return (

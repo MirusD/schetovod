@@ -1,15 +1,17 @@
-import withRedux from "./hoc/withRedux"
-import withRouter from "./hoc/withRouter"
-import { Routes, Route, Navigate } from "react-router-dom"
-import Navbar from "./components/NavBar/NavBar";
-import HomePage from "./pages/HomePage";
-import AuthLayout from "./layout/authLayout";
-import LoginPage from "./pages/LoginPage";
-import ProtectedRoute from "./components/ProtectedRoute";
-import DashboardLayout from "./layout/dashboardLayout";
-import GeneralStatus from "./components/GeneralStatus";
-import BankAccountStatus from "./components/BankAccountStatus";
-import SignUpPage from "./pages/SingUpPage";
+import React from 'react'
+import withRedux from './hoc/withRedux'
+import withRouter from './hoc/withRouter'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import Navbar from './components/NavBar/NavBar'
+import HomePage from './pages/HomePage'
+import AuthLayout from './layout/authLayout'
+import LoginPage from './pages/LoginPage'
+import ProtectedRoute from './components/ProtectedRoute'
+import DashboardLayout from './layout/dashboardLayout'
+import GeneralStatus from './components/GeneralStatus'
+import BankAccountStatus from './components/BankAccountStatus'
+import SignUpPage from './pages/SingUpPage'
+import Profile from './pages/Profile'
 
 function App() {
   return (
@@ -21,11 +23,16 @@ function App() {
             <Routes>
                 <Route index element={<HomePage/>}/>
                 <Route path="auth" element={<AuthLayout/>}>
-                    {/*<Route index element={<LoginPage/>}/>*/}
+                    <Route index element={<LoginPage/>}/>
                     <Route path="login" element={<LoginPage/>}/>
                     <Route path="signup" element={<SignUpPage/>}/>
-                    {/*<Route path="*" element={<LoginPage/>}/>*/}
+                    <Route path="*" element={<LoginPage/>}/>
                 </Route>
+                <Route path="profile" element={
+                    <ProtectedRoute redirect='/auth/login'>
+                        <Profile/>
+                    </ProtectedRoute>
+                }/>
                 <Route path="dashboard/bank-accounts/" element={
                     <ProtectedRoute redirect='/auth/login'>
                         <DashboardLayout/>

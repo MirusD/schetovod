@@ -1,6 +1,6 @@
 import React from 'react'
-import TextField from "../TextField"
-import PropTypes from "prop-types";
+import TextField from '../TextField'
+import PropTypes from 'prop-types'
 
 const StyledTextField = (props) => {
     const MainIcon = props.icon ? props?.icon[0] : null
@@ -10,7 +10,7 @@ const StyledTextField = (props) => {
     return (
         <TextField
             {...props}
-            containerClassName="mt-4 mb-5"
+            containerClassName="mb-5"
             inputContainerClassName="relative text-slate-500"
             inputClassName={`w-full py-2 px-3 ${MainIcon ? 'sm:pl-12' : ''} rounded-md flex items-center h-12 shadow-sm focus:outline-none ring-1 ring-slate-900/10 focus:ring-2 focus:ring-green-600 hover:ring-slate-300`}
             labelClassName="block mb-1"

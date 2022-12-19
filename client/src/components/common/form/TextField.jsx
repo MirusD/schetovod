@@ -22,13 +22,11 @@ const TextField = (
     const [showPassword, setShowPassword] = useState(false)
     const toggleShowPassword = () => setShowPassword(prevState => !prevState)
     const handleChange = ({ target }) => {
-        onChange({name: target.name, value: target.value})
+        onChange({ name: target.name, value: target.value })
     }
     const getInputClasses = () => {
-        return inputClassName
-            + (error ? ' is-invalid' : '')
-            + (type === 'password' ? ' pr-10':'')
-            + (using ? 'ring-1 ring-green-700 focus:ring-green-700': '')
+        return inputClassName + (error ? ' is-invalid' : '') + (type === 'password' ? ' pr-10' : '') +
+            (using ? 'ring-1 ring-green-700 focus:ring-green-700' : '')
     }
 
     return (
@@ -43,7 +41,7 @@ const TextField = (
                     {...rest}
                     name={name}
                     id={name}
-                    type={showPassword ? "text" : type}
+                    type={showPassword ? 'text' : type}
                     value={value}
                     placeholder={placeholder}
                     disabled={disabled}
@@ -81,8 +79,11 @@ TextField.propTypes = {
     placeholder: PropTypes.string,
     disabled: PropTypes.bool,
     using: PropTypes.bool,
-    icon: PropTypes.array
+    icon: PropTypes.array,
+    containerClassName: PropTypes.string,
+    inputContainerClassName: PropTypes.string,
+    inputClassName: PropTypes.string,
+    labelClassName: PropTypes.string
 }
 
 export default TextField
-

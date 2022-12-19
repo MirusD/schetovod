@@ -1,6 +1,6 @@
-import React from "react"
-import logo from "../logo.png"
-import {NavLink} from "react-router-dom";
+import React from 'react'
+import logo from '../logo.png'
+import { NavLink } from 'react-router-dom'
 
 const HomePage = () => {
     return (
@@ -25,15 +25,9 @@ const HomePage = () => {
                 </h1>
                 <div className="mt-5">
                     <NavLink
-                        to="money"
+                        to="auth/login"
                         className="px-5 py-3 rounded-md bg-green-600 text-white hover:bg-green-700 shadow"
-                    >Где?</NavLink>
-                    <NavLink
-                        to=""
-                        className="px-5 py-3 rounded-md bg-white ml-3 text-green-600 hover:bg-green-100 shadow"
-                    >
-                        Я и так знаю
-                    </NavLink>
+                    >Войти</NavLink>
                 </div>
             </div>
         </div>

@@ -1,6 +1,7 @@
-import { BrowserRouter } from "react-router-dom"
+import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
 
-const withRouter = (Component) => ({ ...props }) => {
+const withRouter = (Component) => function func({ ...props }) {
             return (
                 <BrowserRouter>
                     <Component {...props} />
@@ -8,4 +9,4 @@ const withRouter = (Component) => ({ ...props }) => {
             )
         }
 
-export default withRouter;
+export default withRouter

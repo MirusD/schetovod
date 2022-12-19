@@ -1,33 +1,29 @@
-import React, { useState } from "react"
-import Card from "../components/Card"
-import { useLocation, useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
-import { login } from "../store/authSlice"
-import LoginForm from "../components/Forms/LoginForm"
-import StyledNavLink from "../components/StyledNavLink"
+import React, { useState } from 'react'
+import Card from '../components/common/cards/Card'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../store/authSlice'
+import LoginForm from '../components/Forms/LoginForm'
+import StyledNavLink from '../components/common/StyledNavLink'
+import { getMessage } from '../store/messageSlice'
 
 const LoginPage = () => {
-    const [loading, setLoading] = useState(false)
     const [successful, setSuccessful] = useState(false)
-    const message = ""
+    const message = useSelector(getMessage())
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const location = useLocation()
 
     const handleSubmit = (formData) => {
-        setLoading(true)
-        const redirect = location.state ? location.state.referrer.pathname : "/dashboard/bank-accounts"
+        const redirect = location.state ? location.state.referrer.pathname : '/dashboard/bank-accounts'
         dispatch(login(formData))
             .unwrap()
             .then(() => {
                 setSuccessful(true)
-                navigate(redirect, {replace: true})
+                navigate(redirect, { replace: true })
             })
             .catch(() => {
                 setSuccessful(false)
-            })
-            .finally(() => {
-                setLoading(false)
             })
     }
 
@@ -35,15 +31,15 @@ const LoginPage = () => {
         <>
             <div className="mb-12 text-slate-900">
                 <Card.Title>Вход</Card.Title>
-                <LoginForm onSubmite={handleSubmit}/>
+                <LoginForm onSubmite={ handleSubmit }/>
             </div>
             {message && (
                 <div className='form-group'>
                     <div
                         className={
                             successful
-                                ? "alert alert-success"
-                                : "alert alert-danger"
+                                ? 'alert alert-success'
+                                : 'alert alert-danger'
                         }
                         role='alert'
                     >

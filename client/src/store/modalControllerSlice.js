@@ -1,15 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    current: "",
+    current: '',
+    id: ''
 }
 
 const modalControllerSlice = createSlice({
     name: 'modalController',
     initialState,
     reducers: {
-        modalControllerSet: (state,action) => {
-            state.current = action.payload
+        modalControllerSet: (state, action) => {
+            state.current = action.payload.current
+            state.id = action.payload.id
         }
     }
 })
@@ -21,6 +23,6 @@ export const setCurrentOpenModal = (data) => (dispatch) => {
     dispatch(modalControllerSet(data))
 }
 
-export const getCurrentOpenModal = () => (state) => state.openModal.current
+export const getCurrentOpenModal = () => (state) => state.modal
 
 export default modalControllerReducer

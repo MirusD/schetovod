@@ -1,6 +1,6 @@
-import React from "react"
-import { Outlet } from "react-router-dom"
-import Card from "../components/Card"
+import React from 'react'
+import { Outlet } from 'react-router-dom'
+import Card from '../components/common/cards/Card'
 
 const AuthLayout = () => {
     return (

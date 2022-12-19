@@ -1,37 +1,32 @@
 import React, { useState } from 'react'
-import {useDispatch, useSelector} from "react-redux";
-import {getTypesBankAccountList} from "../../store/typeBankAccountsSlice";
-import validator from "../../utils/validator";
-import {setCurrentOpenModal} from "../../store/modalControllerSlice";
-import StyledTextField from "../common/form/styled/StyledTextField";
-import StyledSelectField from "../common/form/styled/StyledSelectField";
-import SelectIconsField from "../common/form/SelectIconsField";
-import card from "../../static/icons/credit-card.svg"
-import bank from "../../static/icons/bank.svg"
-import {getBankAccountById, updateBankAccount} from "../../store/bankAccountsSlice";
-import {useParams} from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux'
+import { getTypesBankAccountList } from '../../store/typeBankAccountsSlice'
+import validator from '../../utils/validator'
+import { setCurrentOpenModal } from '../../store/modalControllerSlice'
+import StyledTextField from '../common/form/styled/StyledTextField'
+import StyledSelectField from '../common/form/styled/StyledSelectField'
+import SelectIconsField from '../common/form/SelectIconsField'
+import { getBankAccountById, updateBankAccount } from '../../store/bankAccountsSlice'
+import { useParams } from 'react-router-dom'
+import bankAccountsIcons from '../../static/icons/bankAccountsIcons'
 
-const listIcons = [
-    { label: 'card', value: card },
-    { label: 'bank', value: bank },
-]
+const listIcons = bankAccountsIcons
 
 const BankAccountSettingsForm = () => {
     const { bankAccountId } = useParams()
     const currentBankAccount = useSelector(getBankAccountById(bankAccountId))
     const types = useSelector(getTypesBankAccountList())
 
-    const listTypes = types.map(t => ({label: t.name, value: t._id}))
+    const listTypes = types.map(t => ({ label: t.name, value: t._id }))
     const initialState = {
         name: currentBankAccount.name,
         amount: String(currentBankAccount.amount),
-        typeID: currentBankAccount.typeID,
+        typeId: currentBankAccount.typeId,
         icon: currentBankAccount.icon
     }
     const dispatch = useDispatch()
     const [data, setData] = useState(initialState)
     const [errors, setErrors] = useState({})
-    const [usingField, setUsingField] = useState({login: false, password: false})
 
     const validatorConfig = {
         name: {
@@ -44,7 +39,7 @@ const BankAccountSettingsForm = () => {
                 message: 'Поле обязательно для заполнения'
             }
         },
-        typeID: {
+        typeId: {
             isRequired: {
                 message: 'Поле обязательно для заполнения'
             }
@@ -53,7 +48,7 @@ const BankAccountSettingsForm = () => {
 
     const validate = (validateData = data) => {
         const errors = validator(validateData, validatorConfig)
-        setErrors(prevState => ({...prevState, ...errors}))
+        setErrors(prevState => ({ ...prevState, ...errors }))
         return Object.values(errors).filter(e => e !== '').length === 0
     }
 
@@ -70,8 +65,7 @@ const BankAccountSettingsForm = () => {
         e.preventDefault()
         const isValid = validate()
         if (isValid) {
-            const updatedBankAccount = {...currentBankAccount, ...data}
-            dispatch(updateBankAccount(updatedBankAccount))
+            dispatch(updateBankAccount({ data, bankAccountId }))
             dispatch(setCurrentOpenModal(''))
         }
     }
@@ -89,13 +83,13 @@ const BankAccountSettingsForm = () => {
                     error={errors.name}
                 />
                 <StyledSelectField
-                    name="typeID"
+                    name="typeId"
                     label="Тип счета"
-                    value={data.typeID}
+                    value={data.typeId}
                     onChange={handleChange}
                     defaultOption="Не выбрана..."
                     options={listTypes}
-                    error={errors.typeID}
+                    error={errors.typeId}
                 />
                 <StyledTextField
                     name="amount"

@@ -1,36 +1,28 @@
-import React, {useState} from 'react'
+import React from 'react'
 import Tooltip from '@mui/material/Tooltip'
 import { createTheme } from '@mui/material/styles'
-import {ThemeProvider} from "@mui/material"
+import { ThemeProvider } from '@mui/material'
 import {
     PlusIcon,
     MinusIcon,
     ArrowsRightLeftIcon,
     TrashIcon,
-    ArrowUturnDownIcon,
-    ArrowTrendingUpIcon,
     WrenchIcon
-} from "@heroicons/react/24/outline"
-import Modal from "../Modal";
-import NewProfitForm from "../Forms/NewProfitForm"
-import NewExpenseForm from "../Forms/NewExpenseForm"
-import NewTransferForm from "../Forms/NewTransferForm"
-import NewLendForm from "../Forms/NewLendForm"
-import {useDispatch, useSelector} from "react-redux"
-import {getCurrentOpenModal, setCurrentOpenModal} from "../../store/modalControllerSlice";
+} from '@heroicons/react/24/outline'
+import { useDispatch } from 'react-redux'
+import { setCurrentOpenModal } from '../../store/modalControllerSlice'
+import PropTypes from 'prop-types'
 
 const theme = createTheme({
-    typography: {
-        fontSize: 18,
-    },
-});
+    typography: { fontSize: 18 }
+})
 
-const BankAccountControllerBar = () => {
+const BankAccountControllerBar = ({ disabled }) => {
     const dispatch = useDispatch()
     const handleClick = (name) => {
-        dispatch(setCurrentOpenModal(name))
+        if (!disabled) dispatch(setCurrentOpenModal({ current: name }))
     }
-    const styles = "h-14 w-14 bg-green-300 rounded-md text-white flex justify-center items-center hover:bg-green-400 transition"
+    const styles = 'h-14 w-14 rounded-md text-white flex justify-center items-center transition ' + (disabled ? ' bg-gray-300' : 'hover:bg-green-400 bg-green-300')
     return (
         <ThemeProvider theme={theme}>
             <div className="flex items-center space-x-2 mb-3">
@@ -49,29 +41,23 @@ const BankAccountControllerBar = () => {
                         <ArrowsRightLeftIcon className="h-auto w-10"/>
                     </button>
                 </Tooltip>
-                {/*<Tooltip title="Дать в долг">*/}
-                {/*    <button className={styles} onClick={() => handleClick('lend')}>*/}
-                {/*        <ArrowUturnDownIcon className="h-auto w-10"/>*/}
-                {/*    </button>*/}
-                {/*</Tooltip>*/}
-                {/*<Tooltip title="Инвестировать">*/}
-                {/*    <button className={styles} onClick={() => handleClick('invest')}>*/}
-                {/*        <ArrowTrendingUpIcon className="h-auto w-10"/>*/}
-                {/*    </button>*/}
-                {/*</Tooltip>*/}
                 <Tooltip title="Настроить">
-                    <button className={`${styles} bg-blue-300 hover:bg-blue-400`} onClick={() => handleClick('settings')}>
+                    <button className={`${styles} ${!disabled ? 'hover:bg-blue-400 bg-blue-300' : ''}`} onClick={() => handleClick('settings')}>
                         <WrenchIcon className="h-auto w-10"/>
                     </button>
                 </Tooltip>
-                <Tooltip title="Удалить счет">
-                    <button className={`${styles} bg-red-300 hover:bg-red-400`} onClick={() => handleClick('remove')}>
+                <Tooltip title="Удалить счет ">
+                    <button className={`${styles} ${!disabled ? 'bg-red-300 hover:bg-red-400' : ''}`} onClick={() => handleClick('remove')}>
                         <TrashIcon className="h-auto w-10"/>
                     </button>
                 </Tooltip>
             </div>
         </ThemeProvider>
     )
+}
+
+BankAccountControllerBar.propTypes = {
+    disabled: PropTypes.bool
 }
 
 export default BankAccountControllerBar

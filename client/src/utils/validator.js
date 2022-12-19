@@ -29,6 +29,10 @@ export function validator(data, config) {
                 statusValidate = data.length < config.value
                 break
             }
+            case 'isNegative': {
+                statusValidate = data < 0
+                break
+            }
             default:
                 break
         }
