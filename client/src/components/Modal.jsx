@@ -1,6 +1,7 @@
-import React  from 'react'
-import {useDispatch} from "react-redux";
-import {setCurrentOpenModal} from "../store/modalControllerSlice";
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import { setCurrentOpenModal } from '../store/modalControllerSlice'
+import PropTypes from 'prop-types'
 
 const Modal = ({ children }) => {
     const dispatch = useDispatch()
@@ -8,8 +9,8 @@ const Modal = ({ children }) => {
         dispatch(setCurrentOpenModal(''))
     }
     return (
-        <div className={`absolute z-10 top-0 left-0 flex justify-center items-start h-screen w-screen bg-black/30`} onClick={handleClick}>
-            <div className={`bg-white rounded-md mt-16 w-96`} onClick={(e) => e.stopPropagation()}>
+        <div className={'fixed z-20 top-0 left-0 bottom-0 right-0 flex justify-center items-center bg-black/30'} onClick={handleClick}>
+            <div className={'bg-white rounded-md w-96'} onClick={(e) => e.stopPropagation()}>
                 {children}
             </div>
         </div>
@@ -32,5 +33,25 @@ const ModalContent = ({ children }) => {
 
 Modal.Title = ModalTitle
 Modal.Content = ModalContent
+
+Modal.propTypes = {
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ])
+}
+ModalTitle.propTypes = {
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ]),
+    label: PropTypes.string
+}
+ModalContent.propTypes = {
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ])
+}
 
 export default Modal

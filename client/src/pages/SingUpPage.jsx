@@ -1,14 +1,13 @@
-import React, { useState } from "react"
-import Card from "../components/Card"
-import { useLocation, useNavigate } from "react-router-dom"
-import {useDispatch, useSelector} from "react-redux"
-import { signUp } from "../store/authSlice"
-import RegistrationForm from "../components/Forms/RegistrationForm"
-import StyledNavLink from "../components/StyledNavLink"
-import { getMessage } from "../store/messageSlice"
+import React, { useState } from 'react'
+import Card from '../components/common/cards/Card'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { signUp } from '../store/authSlice'
+import RegistrationForm from '../components/Forms/RegistrationForm'
+import StyledNavLink from '../components/common/StyledNavLink'
+import { getMessage } from '../store/messageSlice'
 
 const SignUpPage = () => {
-    const [loading, setLoading] = useState(false)
     const [successful, setSuccessful] = useState(false)
     const message = useSelector(getMessage())
     const dispatch = useDispatch()
@@ -16,20 +15,15 @@ const SignUpPage = () => {
 
     const handleSubmit = (formData) => {
         const { username, email, password } = formData
-        setLoading(true)
         setSuccessful(false)
         dispatch(signUp({ username, email, password }))
             .unwrap()
             .then(() => {
                 setSuccessful(true)
-                navigate("/dashboard", { replace: true })
+                navigate('/dashboard/bank-accounts', { replace: true })
             })
             .catch(() => {
-                console.log('catch')
                 setSuccessful(false)
-            })
-            .finally(() => {
-                setLoading(false)
             })
     }
 
@@ -44,8 +38,8 @@ const SignUpPage = () => {
                     <div
                         className={
                             successful
-                                ? "alert alert-success"
-                                : "alert alert-danger"
+                                ? 'alert alert-success'
+                                : 'alert alert-danger'
                         }
                         role='alert'
                     >

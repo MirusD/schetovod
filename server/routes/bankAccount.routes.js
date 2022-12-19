@@ -1,13 +1,14 @@
 const express = require('express')
 const BankAccount = require('../models/BankAccount')
-const Token = require("../models/Token");
-const router = express.Router({mergeParams:true})
+const Transaction = require('../models/Transaction')
+const auth = require('../middleware/auth.middleware')
+const router = express.Router({ mergeParams:true })
 
 router
-    .route('/')
-    .get(async (req, res) => {
+    .route('/', )
+    .get(auth, async (req, res) => {
         try {
-            const list = await BankAccount.find()
+            const list = await BankAccount.find({ userId: req.user._id})
             res.status(200).send(list)
         } catch (e) {
             res.status(500).json({
@@ -15,10 +16,13 @@ router
             })
         }
     })
-    .post(async (req, res) => {
+    .post(auth, async (req, res) => {
         try {
-            const bankAccount = await BankAccount.create(req.body)
-            res.status(201).send(bankAccount)
+            const newBankAccount = await BankAccount.create({
+                ...req.body,
+                userId: req.user._id
+            })
+            res.status(201).send(newBankAccount)
         } catch (e) {
             res.status(500).json({
                 message: 'На сервере произошла ошибка. Попробуйте позже'
@@ -26,14 +30,33 @@ router
         }
     })
 
-router.delete('/:bankAccountId', async (req, res) => {
+router.patch('/:bankAccountId', auth, async (req, res) => {
     try {
         const { bankAccountId } = req.params
-        const removedBankAccount = await BankAccount.findById( bankAccountId )
+        const bankAccount = await BankAccount.findById(bankAccountId)
+        if (bankAccount.userId.toString() === req.user._id) {
+            const updateBankAccount = await BankAccount.findByIdAndUpdate(bankAccount, req.body, { new: true})
+            res.send(updateBankAccount)
+        } else {
+            res.status(401).json({ message: 'Ошибка при обновлении счёта. Вы не авторизованы' })
+        }
+    } catch (e) {
+        res.status(500).json({
+            message: 'На сервере произошла ошибка. Попробуйте позже'
+        })
+    }
+})
 
-        if (removedBankAccount) {
-            await removedBankAccount.remove()
+router.delete('/:bankAccountId', auth, async (req, res) => {
+    try {
+        const { bankAccountId } = req.params
+        const bankAccount = await BankAccount.findById( bankAccountId )
+
+        if (bankAccount.userId.toString() === req.user._id) {
+            await bankAccount.updateOne({ existing: false, name: bankAccount.name + ' (Закрыт)' })
             return res.send(null)
+        } else {
+            res.status(401).json({ message: 'Ошибка при удалении счёта. Вы не авторизованы' })
         }
     } catch (e) {
         res.status(500).json({

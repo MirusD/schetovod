@@ -1,6 +1,6 @@
-import httpService from "./http.service";
+import httpService from './http.service'
 
-const bankAccountEndpoint = '/api/bank-accounts/types'
+const bankAccountEndpoint = 'bank-accounts/types'
 
 const bankAccountService = {
     get: async () => {

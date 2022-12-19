@@ -1,30 +1,27 @@
 import React from 'react'
-import Profits from "./Profits";
-import Condition from "./Condition";
-import Dynamics from "./Dynamics"
-import Expenses from "./Expenses";
-import {useSelector} from "react-redux";
-import {getTransactionsList} from "../store/transactionsSlice";
-import Transactions from "./Transactions";
-import {getBankAccountsList} from "../store/bankAccountsSlice";
+import Condition from './UI/Condition'
+import { useSelector } from 'react-redux'
+import { getTransactionsList } from '../store/transactionsSlice'
+import { getBankAccountsList } from '../store/bankAccountsSlice'
+import Analytics from './UI/Analytics'
 
 const GeneralStatus = () => {
     const transactions = useSelector(getTransactionsList())
     const bankAccounts = useSelector(getBankAccountsList())
-
-    if (!bankAccounts.length) return "У вас нет ни одного счёта."
-
     const totalAmount = bankAccounts.reduce((acc, { amount }) => acc + Number(amount), 0)
 
+    if (!bankAccounts.length) {
+        return (
+            <div className="text-3xl text-gray-600">
+                У вас нет ни одного счёта. <br/>
+                Вы можете добавить его нажав на плюс
+            </div>
+        )
+    }
     return (
         <>
             <Condition total={totalAmount}/>
-            <Dynamics/>
-            <div className="flex flex-wrap">
-                <Profits/>
-                <Expenses/>
-            </div>
-            <Transactions transactions={transactions}/>
+            <Analytics data={transactions}/>
         </>
     )
 }

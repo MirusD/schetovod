@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit"
-import typeBankAccountService from "../services/typeBankAccountService";
+import { createSlice } from '@reduxjs/toolkit'
+import typeBankAccountService from '../services/typeBankAccountService'
 
 const initialState = {
     entities: [],
@@ -14,7 +14,7 @@ const typesBankAccountSlice = createSlice({
         typesBankAccountRequested: (state) => {
             state.isLoading = true
         },
-        typesBankAccountReceved: (state,action) => {
+        typesBankAccountReceved: (state, action) => {
             state.entities = action.payload
             state.isLoading = false
         },
@@ -39,11 +39,8 @@ const typesBankAccountSlice = createSlice({
 const { reducer: typeBankAccountReducer, actions } = typesBankAccountSlice
 const {
     typesBankAccountRequested,
-    typesBankAccountCreated,
-    typesBankAccountRemoved,
     typesBankAccountReceved,
-    typesBankAccountRequestedFailed,
-    typesBankAccountUpdate
+    typesBankAccountRequestedFailed
 } = actions
 
 export const loadTypeBankAccountsList = () => async (dispatch) => {
@@ -55,24 +52,6 @@ export const loadTypeBankAccountsList = () => async (dispatch) => {
         dispatch(typesBankAccountRequestedFailed(error.message))
     }
 }
-
-// export const createTypeBankAccount = (payload) => async (dispatch) => {
-//     dispatch(bankAccountsRequested())
-//     try {
-//
-//     } catch (error) {
-//         dispatch(bankAccountsRequestedFailed(error.message))
-//     }
-// }
-//
-// export const updateTypeBankAccount = (payload) => async (dispatch) => {
-//     dispatch(bankAccountsRequested())
-//     try {
-//
-//     } catch (error) {
-//         dispatch(bankAccountsRequestedFailed(error.message))
-//     }
-// }
 
 export const getTypesBankAccountList = () => (state) => state.typesBankAccount.entities
 export const getBankAccountTypeById = (id) => (state) => state.typesBankAccount.entities.find(a => a._id === id)

@@ -1,34 +1,74 @@
-import { createSlice } from "@reduxjs/toolkit";
-import transactionsService from "../services/transactions.service";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import transactionsService from '../services/transactions.service'
+import { setMessage } from './messageSlice'
+
+export const getTransactions = createAsyncThunk('transactions/get', async (_, thunkAPI) => {
+    try {
+        const response = await transactionsService.get()
+        return response
+    } catch (error) {
+        const message =
+            (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+            error.message ||
+            error.toString()
+        thunkAPI.dispatch(setMessage(message))
+        return thunkAPI.rejectWithValue()
+    }
+})
+
+export const newTransaction = createAsyncThunk('transactions/create', async (payload, thunkAPI) => {
+    try {
+        const response = await transactionsService.create(payload)
+        return response
+    } catch (error) {
+        const message =
+            (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+            error.message ||
+            error.toString()
+        thunkAPI.dispatch(setMessage(message))
+        return thunkAPI.rejectWithValue()
+    }
+})
 
 const initialState = {
     entities: [],
-    isLoading: true,
-    error: null
+    loading: 'idle'
 }
 
 const transactionsSlice = createSlice({
-    name: "transactions",
+    name: 'transactions',
     initialState,
-    reducers: {
-        transactionsRequested: (state) => {
-            state.isLoading = true
-        },
-        transactionsRecived: (state, action) => {
+
+    extraReducers: {
+        [getTransactions.fulfilled]: (state, action) => {
+            state.loading = 'succeeded'
             state.entities = action.payload
-            state.isLoading = false
         },
-        transactionsRequestedFailed:  (state, action) => {
-            state.error = action.payload
-            state.isLoading = false
+        [getTransactions.rejected]: (state) => {
+            state.loading = 'failed'
         },
-        transactionCreated: (state, action) => {
+        [getTransactions.pending]: (state) => {
+            state.loading = 'pending'
+        },
+        [newTransaction.fulfilled]: (state, action) => {
             if (!Array.isArray(state.entities)) state.entities = []
             state.entities.push(action.payload)
         },
+        [newTransaction.rejected]: (state) => {
+            state.loading = 'failed'
+        },
+        [newTransaction.pending]: (state) => {
+            state.loading = 'pending'
+        }
+    },
+    reducers: {
         transactionUpdated: (state, action) => {
             const updateTransactionIndex = state.entities.findIndex(el => el._id === action.payload._id)
-            state.entities[updateTransactionIndex] = {...state.entities[updateTransactionIndex], ...action.payload}
+            state.entities[updateTransactionIndex] = { ...state.entities[updateTransactionIndex], ...action.payload }
         },
         transactionRemoved: (state, action) => {
             state.entities.filter(el => el._id !== action.payload._id)
@@ -36,29 +76,20 @@ const transactionsSlice = createSlice({
     }
 })
 
-const { reducer: transactionReducer, actions } = transactionsSlice
-const { transactionsRequested, transactionsRecived, transactionCreated, transactionsRequestedFailed } = actions
+const { reducer: transactionReducer } = transactionsSlice
 
-export const loadTransactionsList = () => async (dispatch) => {
-    dispatch(transactionsRequested())
-    try {
-        const data = await transactionsService.get()
-        dispatch(transactionsRecived(data))
-    } catch (error) {
-        dispatch(transactionsRequestedFailed(error.message))
-    }
-}
-
-export const newTransaction = (payload) => async (dispatch) => {
-    try {
-        dispatch(transactionCreated(payload))
-    } catch (error) {
-        dispatch(transactionsRequestedFailed(error.message))
-    }
-}
-
+export const getTransactionsLoadingStatus = () => (state) => state.transactions.loading
 export const getTransactionsList = () => (state) => state.transactions.entities
-export const getTransactionsListById = (id) => (state) => state.transactions.entities.filter(t => t.bankAccountsID[0] === id)
-
+export const getTransactionsListById = (id) => (state) =>
+    state.transactions.entities.filter(transaction => {
+        if (transaction.bankAccountsID.length === 2) {
+            if (transaction.bankAccountsID[0] === id) return true
+            if (transaction.bankAccountsID[1] === id) return true
+        } else {
+            if (transaction.bankAccountsID[0] === id) return true
+        }
+        return false
+    })
+export const getTransactionById = (id) => (state) => state.transactions.entities.find(t => t._id === id)
 
 export default transactionReducer

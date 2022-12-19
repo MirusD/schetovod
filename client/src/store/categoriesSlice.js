@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit"
-import categoriesService from "../services/categories.service"
+import { createSlice } from '@reduxjs/toolkit'
+import categoriesService from '../services/categories.service'
 
 const initialState = {
     entities: [],
@@ -14,7 +14,7 @@ const categoriesSlice = createSlice({
         categoriesRequested: (state) => {
             state.isLoading = true
         },
-        categoriesReceved: (state,action) => {
+        categoriesReceved: (state, action) => {
             state.entities = action.payload
             state.isLoading = false
         },
@@ -38,6 +38,7 @@ const categoriesSlice = createSlice({
 
 const { reducer: categoriesReducer, actions } = categoriesSlice
 const {
+    categoryCreated,
     categoriesRequested,
     categoriesReceved,
     categoriesRequestedFailed
@@ -53,23 +54,15 @@ export const loadCategoriesList = () => async (dispatch) => {
     }
 }
 
-// export const createTypeBankAccount = (payload) => async (dispatch) => {
-//     dispatch(bankAccountsRequested())
-//     try {
-//
-//     } catch (error) {
-//         dispatch(bankAccountsRequestedFailed(error.message))
-//     }
-// }
-//
-// export const updateTypeBankAccount = (payload) => async (dispatch) => {
-//     dispatch(bankAccountsRequested())
-//     try {
-//
-//     } catch (error) {
-//         dispatch(bankAccountsRequestedFailed(error.message))
-//     }
-// }
+export const addNewCategory = (payload) => async (dispatch) => {
+    try {
+        const data = await categoriesService.create(payload)
+        dispatch(categoryCreated(data))
+        return data
+    } catch (error) {
+        dispatch(categoriesRequestedFailed(error.message))
+    }
+}
 
 export const getCategoriesList = () => (state) => state.categories.entities
 export const getCategoriesProfit = () => (state) => state.categories.entities.filter(c => c.type === 'Доход')

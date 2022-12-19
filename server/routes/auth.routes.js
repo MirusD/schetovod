@@ -4,6 +4,7 @@ const { check, validationResult } = require('express-validator')
 const router = express.Router({ mergeParams:true })
 const tokenService = require('../services/token.service')
 const bcrypt = require('bcryptjs')
+const auth = require('../middleware/auth.middleware')
 const { generateUserData } = require('../utils/helper')
 
 router.post('/signUp', [
@@ -43,7 +44,12 @@ router.post('/signUp', [
             const tokens = tokenService.generate({ _id: newUser._id })
             await tokenService.save(newUser._id, tokens.refreshToken)
 
-            res.status(201).send({ ...tokens, userID: newUser._id, username: newUser.username, avatar: newUser.avatar})
+            res.status(201).send({
+                ...tokens, userId: newUser._id,
+                username: newUser.username,
+                avatar: newUser.avatar,
+                email: newUser.email
+            })
 
         } catch (e) {
             res.status(500).json({
@@ -85,7 +91,7 @@ router.post('/signInWithPassword', [
             const tokens = tokenService.generate({ _id: existingUser._id})
             await tokenService.save(existingUser._id, tokens.refreshToken)
 
-            res.status(200).send({ ...tokens, userID: existingUser._id, username: existingUser.username, avatar: existingUser.avatar })
+            res.status(200).send({ ...tokens, userId: existingUser._id, username: existingUser.username, avatar: existingUser.avatar, email: existingUser.email })
 
         } catch (e) {
             res.status(500).json({
@@ -96,7 +102,7 @@ router.post('/signInWithPassword', [
 ])
 
 function isTokenInvalid(data, dbToken) {
-    return !data || !dbToken || data._id !== dbToken?.userID?.toString()
+    return !data || !dbToken || data._id !== dbToken?.userId?.toString()
 }
 
 router.post('/token', async (req, res) => {
@@ -121,5 +127,32 @@ router.post('/token', async (req, res) => {
         })
     }
 })
+
+router
+    .route('/user')
+    .get(auth, async (req, res) => {
+        try {
+            const user = await User.findById(req.user._id)
+            res.status(200).send(user)
+        } catch (e) {
+            res.status(500).json({
+                message: 'На сервере произошла ошибка. Попробуйте позже'
+            })
+        }
+    })
+    .post(auth, async (req, res) => {
+        try {
+            const user = await User.findById(req.user._id)
+            if (user) {
+                await user.update({$set: {...req.body}})
+                const updatedUser = await User.findById(req.user._id)
+                res.status(200).send({ username: updatedUser.username, email: updatedUser.email, avatar: updatedUser.avatar })
+            }
+        } catch {
+            res.status(500).json({
+                message: 'На сервере произошла ошибка. Попробуйте позже'
+            })
+        }
+    })
 
 module.exports = router

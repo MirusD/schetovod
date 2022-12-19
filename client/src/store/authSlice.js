@@ -1,21 +1,17 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import authService from "../services/auth.service"
-import localStorageService from "../services/localStorage.service"
-import { setMessage } from "./messageSlice"
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import authService from '../services/auth.service'
+import localStorageService from '../services/localStorage.service'
+import { setMessage } from './messageSlice'
 
 export const signUp = createAsyncThunk(
-    "auth/signup",
-    async ({ username, email, password }, thunkAPI) => {
+    'auth/signup',
+    async (payload, thunkAPI) => {
         try {
-            const response = await authService.register({
-                    username,
-                    email,
-                    password
-                },
-            )
-            const { accessToken, refreshToken, expiresIn, userID, username: name, avatar } = response
-            localStorageService.setTokens({ accessToken, refreshToken, userID, expiresIn})
-            return { userID, username: name, avatar }
+            const response = await authService.register(payload)
+            console.log(response)
+            const { userId, username, avatar, email } = response
+            localStorageService.setTokens(response)
+            return { userId, username, avatar, email }
         } catch (error) {
             const message = (
                 error.response &&
@@ -29,16 +25,13 @@ export const signUp = createAsyncThunk(
 )
 
 export const login = createAsyncThunk(
-    "auth/login",
-    async ({ email, password }, thunkAPI) => {
+    'auth/login',
+    async (payload, thunkAPI) => {
         try {
-            const response = await authService.login({
-                email,
-                password
-            })
-            const { accessToken, refreshToken, expiresIn, userID, username: name, avatar } = response
-            localStorageService.setTokens({ accessToken, refreshToken, userID, expiresIn})
-            return { userID, username: name, avatar }
+            const response = await authService.login(payload)
+            const { accessToken, refreshToken, expiresIn, userId, username: name, avatar, email } = response
+            localStorageService.setTokens({ accessToken, refreshToken, userId, expiresIn, username: name, avatar, email })
+            return { userId, username: name, avatar, email }
         } catch (error) {
             const message = (
                 error.response &&
@@ -51,23 +44,52 @@ export const login = createAsyncThunk(
     }
 )
 
-export const logout = createAsyncThunk("auth/logout", async () => await authService.logout())
+export const userUpdate = createAsyncThunk(
+    'auth/updateUser',
+    async (payload, thunkAPI) => {
+        try {
+            const response = await authService.update(payload)
+            localStorageService.updateUser(response)
+            return response
+        } catch (error) {
+            const message = (
+                error.response &&
+                error.response.data &&
+                error.response.data.message
+            ) || error.message || error.toString()
+            thunkAPI.dispatch(setMessage(message))
+            return thunkAPI.rejectWithValue()
+        }
+    }
+)
 
-const initialState = {
-    isLoggedIn: false,
-    user: {}
-}
+export const logout = createAsyncThunk('auth/logout', async () => await authService.logout())
+
+const initialState = localStorageService.getAccessToken() && localStorageService.getExpiresDateToken() > Date.now()
+    ? {
+        isLoggedIn: true,
+        user: {
+            userId: localStorageService.getUserId(),
+            username: localStorageService.getUserName(),
+            avatar: localStorageService.getUserAvatar(),
+            email: localStorageService.getUserEmail()
+        }
+    }
+    : {
+        isLoggedIn: false,
+        user: {}
+    }
 
 const authSlice = createSlice({
-    name: "auth",
+    name: 'auth',
     initialState,
     extraReducers: {
         [signUp.fulfilled]: (state, action) => {
-            state.isLoggedIn = true;
-            state.user = action.payload;
+            state.isLoggedIn = true
+            state.user = action.payload
         },
         [signUp.rejected]: (state) => {
-            state.isLoggedIn = false;
+            state.isLoggedIn = false
         },
         [login.fulfilled]: (state, action) => {
             state.isLoggedIn = true
@@ -84,6 +106,9 @@ const authSlice = createSlice({
         [logout.fulfilled]: (state) => {
             state.isLoggedIn = false
             state.user = null
+        },
+        [userUpdate.fulfilled]: (state, action) => {
+            state.user = action.payload
         }
     }
 })

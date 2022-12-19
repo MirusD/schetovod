@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import validator from '../../utils/validator'
-import { UserIcon, KeyIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"
-import StyledTextField from "../common/form/styled/StyledTextField"
+import { UserIcon, KeyIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import StyledTextField from '../common/form/styled/StyledTextField'
+import PropTypes from 'prop-types'
 
 const LoginForm = ({ onSubmite }) => {
     const initialValues = {
-        username: "",
-        email: "",
-        password: ""
+        username: '',
+        email: '',
+        password: ''
     }
     const [data, setData] = useState(initialValues)
     const [errors, setErrors] = useState({})
-    const [usingField, setUsingField] = useState({login: false, password: false})
+    const [usingField, setUsingField] = useState({ login: false, password: false })
 
     const validatorConfig = {
         username: {
@@ -32,7 +33,7 @@ const LoginForm = ({ onSubmite }) => {
     }
     const validate = (validateData = data) => {
         const errors = validator(validateData, validatorConfig)
-        setErrors(prevState => ({...prevState, ...errors}))
+        setErrors(prevState => ({ ...prevState, ...errors }))
         return Object.values(errors).filter(e => e !== '').length === 0
     }
     const handleChange = (target) => {
@@ -49,7 +50,7 @@ const LoginForm = ({ onSubmite }) => {
         const isValid = validate()
         if (isValid) onSubmite(data)
     }
-    const handleToucheField = ({target}) => {
+    const handleToucheField = ({ target }) => {
         const { name, value } = target
         if (target) {
             setUsingField(prevState => ({
@@ -105,6 +106,10 @@ const LoginForm = ({ onSubmite }) => {
             </button>
         </form>
     )
+}
+
+LoginForm.propTypes = {
+    onSubmite: PropTypes.func
 }
 
 export default LoginForm

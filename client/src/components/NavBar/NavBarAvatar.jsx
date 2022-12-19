@@ -1,6 +1,7 @@
-import React from "react"
+import React from 'react'
+import PropTypes from 'prop-types'
 
-const NavBarAvatar = ({src}) => {
+const NavBarAvatar = ({ src }) => {
     return (
         <img
             src={src}
@@ -8,6 +9,10 @@ const NavBarAvatar = ({src}) => {
             alt='avatar'
         />
     )
+}
+
+NavBarAvatar.propTypes = {
+    src: PropTypes.string
 }
 
 export default NavBarAvatar

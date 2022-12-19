@@ -1,20 +1,22 @@
-import axios from "axios";
+import httpService from './http.service'
 
-const httpBankAccount = axios.create({
-    baseURL: 'http://localhost:8080/api/bank-accounts/'
-})
+const bankAccountEndpoint = 'bank-accounts/'
 
 const bankAccountService = {
     get: async () => {
-        const { data } = await httpBankAccount.get()
+        const { data } = await httpService.get(bankAccountEndpoint)
         return data
     },
     create: async (payload) => {
-        const { data } = await httpBankAccount.post('/', payload)
+        const { data } = await httpService.post(bankAccountEndpoint, payload)
+        return data
+    },
+    update: async (payload, bankAccountId) => {
+        const { data } = await httpService.patch(bankAccountEndpoint + bankAccountId, payload)
         return data
     },
     remove: async (id) => {
-        const { data } = await httpBankAccount.delete(`/${id}`)
+        const { data } = await httpService.delete(bankAccountEndpoint + id)
         return data
     }
 }

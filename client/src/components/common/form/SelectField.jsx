@@ -17,10 +17,10 @@ const SelectField = ({
             ? Object.values(options)
             : options
     const handleChange = ({ target }) => {
-        onChange({name: target.name, value: target.value})
+        onChange({ name: target.name, value: target.value })
     }
     return (
-        <div className="relative">
+        <div className="relative w-full">
             <label className="mb-1 block">
                 {label}
             </label>
@@ -32,7 +32,7 @@ const SelectField = ({
                 disabled={disabled}
                 className={selectClassName}
             >
-                <option disabled value="">
+                <option value="">
                     {defaultOption}
                 </option>
                 {optionsArray.length > 0 &&
@@ -59,7 +59,8 @@ SelectField.propTypes = {
     error: PropTypes.string,
     options: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     name: PropTypes.string,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    selectClassName: PropTypes.string
 }
 
 export default SelectField

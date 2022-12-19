@@ -14,14 +14,22 @@ class TokenService {
     }
 
     async save(user, refreshToken) {
-        const data = await Token.findOne({ userID: user })
+        const data = await Token.findOne({ userId: user })
         if (data) {
             data.refreshToken = refreshToken
             return data.save()
         }
 
-        const token = await Token.create({ userID: user, refreshToken })
+        const token = await Token.create({ userId: user, refreshToken })
         return token
+    }
+
+    validateAccess(accessToken) {
+        try {
+            return jwt.verify(accessToken, config.get('accessSecret'))
+        } catch (e) {
+            return null
+        }
     }
 
     validateRefresh(refreshToken) {
