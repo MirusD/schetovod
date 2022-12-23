@@ -9,7 +9,7 @@ const { generateUserData } = require('../utils/helper')
 
 router.post('/signUp', [
     check('username', 'Поле имя не может быть пустым').exists(),
-    check('email', 'Нерорректный email').normalizeEmail().isEmail(),
+    check('email', 'Некорректный email').normalizeEmail().isEmail(),
     check('password', 'Минимальная длина пароля 8 символов').isLength({ min: 8 }),
     async (req, res) => {
         try {

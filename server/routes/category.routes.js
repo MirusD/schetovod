@@ -1,7 +1,7 @@
 const express = require('express')
 const Category = require('../models/Category')
 const auth = require('../middleware/auth.middleware')
-const router = express.Router({mergeParams:true})
+const router = express.Router({ mergeParams:true })
 
 router
     .route('/')
@@ -29,5 +29,30 @@ router
             })
         }
     })
+
+router.patch('/:categoryId', auth, async (req, res) => {
+    try {
+        const { categoryId } = req.params
+        console.log(categoryId, req.body)
+        const updateCategory = await Category.findByIdAndUpdate(categoryId, req.body, { new: true })
+        res.send(updateCategory)
+    } catch (e) {
+        res.status(500).json({
+            message: 'На сервере произошла ошибка. Попробуйте позже'
+        })
+    }
+})
+
+router.delete('/:categoryId', auth, async (req, res) => {
+    try {
+        const { categoryId } = req.params
+        await Category.findByIdAndUpdate(categoryId, { existing: false }, { new: true })
+        res.send(null)
+    } catch (e) {
+        res.status(500).json({
+            message: 'На сервере произошла ошибка. Попробуйте позже'
+        })
+    }
+})
 
 module.exports = router

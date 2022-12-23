@@ -1,17 +1,16 @@
 import React, { useState } from 'react'
-import StyledTextField from '../common/form/styled/StyledTextField'
-import StyledSelectField from '../common/form/styled/StyledSelectField'
 import { useDispatch, useSelector } from 'react-redux'
 import { getBankAccountById, getBankAccountsList, updateBankAccount } from '../../store/bankAccountsSlice'
-import { useParams } from 'react-router-dom'
-import validator from '../../utils/validator'
 import { newTransaction } from '../../store/transactionsSlice'
 import { setCurrentOpenModal } from '../../store/modalControllerSlice'
+import StyledTextField from '../common/form/styled/StyledTextField'
+import validator from '../../utils/validator'
+import StyledSelectField from '../common/form/styled/StyledSelectField'
+import PropTypes from 'prop-types'
+import { getCategoryTransfer } from '../../store/categoriesSlice'
 
-const NewTransferForm = () => {
-    const params = useParams()
+const NewTransferForm = ({ bankAccountId }) => {
     const dispatch = useDispatch()
-    const { bankAccountId } = params
     const initialState = {
         amount: '',
         from: bankAccountId,
@@ -21,6 +20,7 @@ const NewTransferForm = () => {
     const bankAccounts = useSelector(getBankAccountsList())
     const currentBankAccount = useSelector(getBankAccountById(bankAccountId))
     const toBankAccount = useSelector(getBankAccountById(data.to))
+    const category = useSelector(getCategoryTransfer())
     const bankAccountsList = bankAccounts.map(ba => ({ label: ba.name, value: ba._id }))
     const [errors, setErrors] = useState({})
 
@@ -73,7 +73,7 @@ const NewTransferForm = () => {
             dispatch(newTransaction(
                 {
                     amount: data.amount,
-                    categoryID: null,
+                    categoryID: category._id,
                     type: 'Перевод',
                     bankAccountsID: [currentBankAccount._id, toBankAccount._id],
                     comment: ''
@@ -94,15 +94,6 @@ const NewTransferForm = () => {
                     error={errors.amount}
                 />
                 <StyledSelectField
-                    name="from"
-                    label="Откуда"
-                    value={bankAccountId}
-                    onChange={handleChange}
-                    defaultOption={bankAccountId}
-                    options={bankAccountsList}
-                    disabled={true}
-                />
-                <StyledSelectField
                     name="to"
                     label="Куда"
                     value={data.to}
@@ -117,6 +108,10 @@ const NewTransferForm = () => {
             </form>
         </>
     )
+}
+
+NewTransferForm.propTypes = {
+    bankAccountId: PropTypes.string
 }
 
 export default NewTransferForm

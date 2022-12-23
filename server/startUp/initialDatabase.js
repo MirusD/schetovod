@@ -9,6 +9,7 @@ module.exports = async () => {
     // if (categories.length !== categoryMock.length) {
     //     await createInitialEntity(Category, categoryMock)
     // }
+    await createInitialEntity(Category, categoryMock)
 
     const typeBankAccount = await TypeBankAccount.find()
     // if (typeBankAccount.length !== typeBankAccountMock.length) {

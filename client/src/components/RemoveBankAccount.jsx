@@ -1,11 +1,10 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getBankAccountById, removeBankAccount } from '../store/bankAccountsSlice'
 import { setCurrentOpenModal } from '../store/modalControllerSlice'
+import PropTypes from 'prop-types'
 
-const RemoveBankAccount = () => {
-    const { bankAccountId } = useParams()
+const RemoveBankAccount = ({ bankAccountId }) => {
     const currentBankAccount = useSelector(getBankAccountById(bankAccountId))
     const dispatch = useDispatch()
     const closeModal = () => {
@@ -34,6 +33,10 @@ const RemoveBankAccount = () => {
                 </div>}
         </div>
     )
+}
+
+RemoveBankAccount.propTypes = {
+    bankAccountId: PropTypes.string
 }
 
 export default RemoveBankAccount

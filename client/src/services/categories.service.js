@@ -9,6 +9,14 @@ const transactionsService = {
     create: async (payload) => {
         const { data } = await httpService.post(transactionsEndpoint, payload)
         return data
+    },
+    update: async (payload, categoryId) => {
+        const { data } = await httpService.patch(transactionsEndpoint + categoryId, payload)
+        return data
+    },
+    remove: async (categoryId) => {
+        const { data } = await httpService.delete(transactionsEndpoint + categoryId)
+        return data
     }
 }
 

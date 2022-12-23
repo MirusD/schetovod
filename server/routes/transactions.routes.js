@@ -29,4 +29,22 @@ router
         }
     })
 
+router.delete('/:transactionId', auth, async (req, res) => {
+    try {
+        const { transactionId } = req.params
+        const removeTransaction = await Transactions.findById( transactionId )
+
+        if (removeTransaction.userId.toString() === req.user._id) {
+            await removeTransaction.remove()
+            return res.send(null)
+        } else {
+            res.status(401).json({ message: 'Ошибка при удалении счёта. Вы не авторизованы' })
+        }
+    } catch (e) {
+        res.status(500).json({
+            message: 'На сервере произошла ошибка. Попробуйте позже'
+        })
+    }
+})
+
 module.exports = router

@@ -5,21 +5,23 @@ import { getCategoriesProfit, addNewCategory } from '../../store/categoriesSlice
 import { getBankAccountById, updateBankAccount } from '../../store/bankAccountsSlice'
 import { newTransaction } from '../../store/transactionsSlice'
 import { setCurrentOpenModal } from '../../store/modalControllerSlice'
-import { useParams } from 'react-router-dom'
 import { PlusIcon, MinusIcon } from '@heroicons/react/24/outline'
+import Tooltip from '@mui/material/Tooltip'
 import validator from '../../utils/validator'
 import SelectFieldWithBtn from '../common/form/SelectFieldWithBtn'
+import PropTypes from 'prop-types'
+import StyledTextAreaField from '../common/form/styled/StyledTextAreaField'
 
-const NewProfitForm = () => {
+const NewProfitForm = ({ bankAccountId }) => {
     const initialState = {
         amount: '',
         category: '',
-        newCategory: ''
+        newCategory: '',
+        comment: ''
     }
     const [data, setData] = useState(initialState)
     const [newCategory, setNewCategory] = useState(false)
     const dispatch = useDispatch()
-    const { bankAccountId } = useParams()
     const currentBankAccount = useSelector(getBankAccountById(bankAccountId))
     const categories = useSelector(getCategoriesProfit())
     const categoriesList = categories.map(category => ({ label: category.name, value: category._id }))
@@ -88,7 +90,7 @@ const NewProfitForm = () => {
                         categoryID: data.category,
                         type: 'Доход',
                         bankAccountsID: [updatedBankAccount._id],
-                        comment: ''
+                        comment: data.comment
                     }))
                 dispatch(setCurrentOpenModal(''))
             }
@@ -123,12 +125,14 @@ const NewProfitForm = () => {
                     error={errors.category}
                     disabled={newCategory}
                 >
-                    <button className="w-full h-full" onClick={handleEnabledFieldNewCategory}>
-                        {newCategory
-                            ? <MinusIcon className='text-white h-9 w-full'/>
-                            : <PlusIcon className='text-white h-9 w-full'/>
-                        }
-                    </button>
+                    <Tooltip title="Добавить новую категорию">
+                        <button className="w-full h-full" onClick={handleEnabledFieldNewCategory}>
+                            {newCategory
+                                ? <MinusIcon className='text-white h-9 w-full'/>
+                                : <PlusIcon className='text-white h-9 w-full'/>
+                            }
+                        </button>
+                    </Tooltip>
                 </SelectFieldWithBtn>
                 {newCategory &&
                     <StyledTextField
@@ -140,12 +144,22 @@ const NewProfitForm = () => {
                         error={errors.newCategory}
                     />
                 }
+                <StyledTextAreaField
+                    name="comment"
+                    label="Комментарии"
+                    value={data.comment || ''}
+                    onChange={handleChange}
+                />
                 <button className="inline-flex w-full items-center justify-center py-3 px-5 leading-6 shadow text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-500 focus:outline-none my-2 mt-8">
                     Применить
                 </button>
             </form>
         </>
     )
+}
+
+NewProfitForm.propTypes = {
+    bankAccountId: PropTypes.string
 }
 
 export default NewProfitForm

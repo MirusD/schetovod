@@ -12,7 +12,7 @@ http.interceptors.request.use(
         const expiresDate = localStorageService.getExpiresDateToken()
         const refreshToken = localStorageService.getRefreshToken()
         if (refreshToken && expiresDate < Date.now()) {
-            const data = authService.refresh()
+            const data = await authService.refresh()
             console.log(data)
             localStorageService.setTokens({
                 refreshToken: data.refreshToken,

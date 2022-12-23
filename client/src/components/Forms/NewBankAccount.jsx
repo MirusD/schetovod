@@ -1,21 +1,22 @@
 import React, { useState } from 'react'
-import StyledTextField from '../common/form/styled/StyledTextField'
-import StyledSelectField from '../common/form/styled/StyledSelectField'
 import { useDispatch, useSelector } from 'react-redux'
 import { setCurrentOpenModal } from '../../store/modalControllerSlice'
 import { getTypesBankAccountList } from '../../store/typeBankAccountsSlice'
-import SelectIconsField from '../common/form/SelectIconsField'
-import card from '../../static/icons/bankAccountsIcons/credit-card.svg'
-import validator from '../../utils/validator'
-import { createBankAccount, getBankAccountsList } from '../../store/bankAccountsSlice'
-import bankAccountsIcons from '../../static/icons/bankAccountsIcons'
-import { createBankAccountGroup, getBankAccountGroupsList } from '../../store/bankAccountGroupsSlice'
-import SelectFieldWithBtn from '../common/form/SelectFieldWithBtn'
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline'
+import { createBankAccount, getBankAccountsList } from '../../store/bankAccountsSlice'
+import { createBankAccountGroup, getBankAccountGroupsList } from '../../store/bankAccountGroupsSlice'
+import StyledTextField from '../common/form/styled/StyledTextField'
+import StyledSelectField from '../common/form/styled/StyledSelectField'
+import SelectIconsField from '../common/form/SelectIconsField'
+import validator from '../../utils/validator'
+import bankAccountsIcons from '../../static/icons/bankAccountsIcons'
+import SelectFieldWithBtn from '../common/form/SelectFieldWithBtn'
+import Tooltip from '@mui/material/Tooltip'
+import PropTypes from 'prop-types'
 
 const listIcons = bankAccountsIcons
 
-const NewBankAccount = () => {
+const NewBankAccount = ({ groupId }) => {
     const [newGroup, setNewGroup] = useState(false)
     const types = useSelector(getTypesBankAccountList())
     const bankAccounts = useSelector(getBankAccountsList())
@@ -28,9 +29,9 @@ const NewBankAccount = () => {
         name: '',
         amount: '',
         typeId: '',
-        groupId: '',
+        groupId: groupId || '',
         newGroup: isNewGroup ? 'Мои счета' : '',
-        icon: card
+        icon: listIcons[1].value
     }
     const [data, setData] = useState(initialState)
     const dispatch = useDispatch()
@@ -141,23 +142,28 @@ const NewBankAccount = () => {
                     options={listTypes}
                     error={errors.typeId}
                 />
-                <SelectFieldWithBtn
-                    name="groupId"
-                    label="Группа"
-                    value={data.groupId}
-                    onChange={handleChange}
-                    defaultOption="Не выбрана..."
-                    options={listGroups}
-                    error={errors.groupId}
-                    disabled={isNewGroup}
-                >
-                    <button className="w-full h-full" onClick={handleEnabledFieldNewGroup}>
-                        {newGroup
-                            ? <MinusIcon className='text-white h-9 w-full'/>
-                            : <PlusIcon className='text-white h-9 w-full'/>
-                        }
-                    </button>
-                </SelectFieldWithBtn>
+                {groups.length !== 0 && (
+                        <SelectFieldWithBtn
+                            name="groupId"
+                            label="Группа"
+                            value={data.groupId}
+                            onChange={handleChange}
+                            defaultOption="Не выбрана..."
+                            options={listGroups}
+                            error={errors.groupId}
+                            disabled={isNewGroup}
+                        >
+                            <Tooltip title="Добавить новую группу">
+                                <button className="w-full h-full" onClick={handleEnabledFieldNewGroup}>
+                                    {newGroup
+                                        ? <MinusIcon className='text-white h-9 w-full'/>
+                                        : <PlusIcon className='text-white h-9 w-full'/>
+                                    }
+                                </button>
+                            </Tooltip>
+                        </SelectFieldWithBtn>
+                    )
+                }
                 {newGroup &&
                     <StyledTextField
                         name="newGroup"
@@ -190,6 +196,10 @@ const NewBankAccount = () => {
             </form>
         </>
     )
+}
+
+NewBankAccount.propTypes = {
+    groupId: PropTypes.string
 }
 
 export default NewBankAccount

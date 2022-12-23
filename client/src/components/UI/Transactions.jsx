@@ -23,7 +23,7 @@ const Transactions = ({ transactions = [] }) => {
     const groupTransactionsKeys = Object.keys(groupTransactions)
     const dispatch = useDispatch()
     const handleClick = (id) => {
-        dispatch(setCurrentOpenModal({ current: 'transaction', id }))
+        dispatch(setCurrentOpenModal({ current: 'transaction', data: id }))
     }
     const handlePageChange = (pageIndex) => setCurrentPage(pageIndex)
     if (!transactions) return 'Loading...'

@@ -1,59 +1,49 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import typeBankAccountService from '../services/typeBankAccountService'
+import { setMessage } from './messageSlice'
+
+export const getBankAccountTypes = createAsyncThunk('typeBankAccounts/get', async (_, thunkAPI) => {
+    try {
+        const data = await typeBankAccountService.get()
+        return data
+    } catch (error) {
+        const message =
+            (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+            error.message ||
+            error.toString()
+        thunkAPI.dispatch(setMessage(message))
+        return thunkAPI.rejectWithValue()
+    }
+})
 
 const initialState = {
     entities: [],
-    isLoading: true,
-    error: null
+    loading: 'idle'
 }
 
 const typesBankAccountSlice = createSlice({
     name: 'typeBankAccounts',
     initialState,
-    reducers: {
-        typesBankAccountRequested: (state) => {
-            state.isLoading = true
-        },
-        typesBankAccountReceved: (state, action) => {
+    extraReducers: {
+        [getBankAccountTypes.fulfilled]: (state, action) => {
+            state.loading = 'succeeded'
             state.entities = action.payload
-            state.isLoading = false
         },
-        typesBankAccountRequestedFailed: (state, action) => {
-            state.error = action.payload
-            state.isLoading = false
+        [getBankAccountTypes.rejected]: (state) => {
+            state.loading = 'failed'
         },
-        typesBankAccountreated: (state, action) => {
-            if (!Array.isArray(state.entities)) state.entities = []
-            state.entities.push(action.payload)
-        },
-        typesBankAccountemoved: (state, action) => {
-            state.entities = state.entities.filter(el => el._id !== action.payload._id)
-        },
-        typesBankAccountUpdate: (state, action) => {
-            const updateBankAccountIndex = state.entities.findIndex(el => el._id === action.payload._id)
-            state.entities[updateBankAccountIndex] = { ...state.entities[updateBankAccountIndex], ...action.payload }
+        [getBankAccountTypes.pending]: (state) => {
+            state.loading = 'pending'
         }
     }
 })
 
-const { reducer: typeBankAccountReducer, actions } = typesBankAccountSlice
-const {
-    typesBankAccountRequested,
-    typesBankAccountReceved,
-    typesBankAccountRequestedFailed
-} = actions
-
-export const loadTypeBankAccountsList = () => async (dispatch) => {
-    dispatch(typesBankAccountRequested())
-    try {
-        const data = await typeBankAccountService.get()
-        dispatch(typesBankAccountReceved(data))
-    } catch (error) {
-        dispatch(typesBankAccountRequestedFailed(error.message))
-    }
-}
+const { reducer: typeBankAccountReducer } = typesBankAccountSlice
 
 export const getTypesBankAccountList = () => (state) => state.typesBankAccount.entities
 export const getBankAccountTypeById = (id) => (state) => state.typesBankAccount.entities.find(a => a._id === id)
+export const getBankAccountTypesLoadingStatus = () => (state) => state.typesBankAccount.loading
 
 export default typeBankAccountReducer

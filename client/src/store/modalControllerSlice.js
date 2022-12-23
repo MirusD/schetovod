@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     current: '',
-    id: ''
+    data: ''
 }
 
 const modalControllerSlice = createSlice({
@@ -11,7 +11,7 @@ const modalControllerSlice = createSlice({
     reducers: {
         modalControllerSet: (state, action) => {
             state.current = action.payload.current
-            state.id = action.payload.id
+            state.data = action.payload.data
         }
     }
 })

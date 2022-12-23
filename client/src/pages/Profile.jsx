@@ -77,7 +77,7 @@ const Profile = () => {
         }
     }
     return (
-        <form className="flex grow flex-col justify-center items-center  dark:text-slate-200" onSubmit={handlerSubmite}>
+        <form className="flex grow flex-col justify-center items-center dark:text-slate-200" onSubmit={handlerSubmite}>
             <Card>
                 <Card.Title>
                     Профиль

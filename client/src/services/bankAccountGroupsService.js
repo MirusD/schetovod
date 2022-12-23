@@ -1,6 +1,6 @@
 import httpService from './http.service'
 
-const groupsBankAccountsEndpoint = 'bank-accounts/groups'
+const groupsBankAccountsEndpoint = 'bank-accounts/groups/'
 
 const bankAccountGroupsService = {
     get: async () => {
@@ -11,8 +11,8 @@ const bankAccountGroupsService = {
         const { data } = await httpService.post(groupsBankAccountsEndpoint, payload)
         return data
     },
-    update: async (payload, bankAccountId) => {
-        const { data } = await httpService.patch(groupsBankAccountsEndpoint + bankAccountId, payload)
+    update: async (payload, groupId) => {
+        const { data } = await httpService.patch(groupsBankAccountsEndpoint + groupId, payload)
         return data
     },
     remove: async (id) => {

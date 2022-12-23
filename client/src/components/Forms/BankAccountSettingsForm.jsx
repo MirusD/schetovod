@@ -1,27 +1,30 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getTypesBankAccountList } from '../../store/typeBankAccountsSlice'
-import validator from '../../utils/validator'
+import { getBankAccountById, updateBankAccount } from '../../store/bankAccountsSlice'
 import { setCurrentOpenModal } from '../../store/modalControllerSlice'
+import { getBankAccountGroupsList } from '../../store/bankAccountGroupsSlice'
+import validator from '../../utils/validator'
 import StyledTextField from '../common/form/styled/StyledTextField'
 import StyledSelectField from '../common/form/styled/StyledSelectField'
 import SelectIconsField from '../common/form/SelectIconsField'
-import { getBankAccountById, updateBankAccount } from '../../store/bankAccountsSlice'
-import { useParams } from 'react-router-dom'
 import bankAccountsIcons from '../../static/icons/bankAccountsIcons'
+import PropTypes from 'prop-types'
 
 const listIcons = bankAccountsIcons
 
-const BankAccountSettingsForm = () => {
-    const { bankAccountId } = useParams()
+const BankAccountSettingsForm = ({ bankAccountId }) => {
     const currentBankAccount = useSelector(getBankAccountById(bankAccountId))
     const types = useSelector(getTypesBankAccountList())
+    const groups = useSelector(getBankAccountGroupsList())
+    const listGroups = groups.map(group => ({ label: group.name, value: group._id }))
 
     const listTypes = types.map(t => ({ label: t.name, value: t._id }))
     const initialState = {
         name: currentBankAccount.name,
         amount: String(currentBankAccount.amount),
         typeId: currentBankAccount.typeId,
+        groupId: currentBankAccount.groupId,
         icon: currentBankAccount.icon
     }
     const dispatch = useDispatch()
@@ -40,6 +43,11 @@ const BankAccountSettingsForm = () => {
             }
         },
         typeId: {
+            isRequired: {
+                message: 'Поле обязательно для заполнения'
+            }
+        },
+        groupId: {
             isRequired: {
                 message: 'Поле обязательно для заполнения'
             }
@@ -91,6 +99,15 @@ const BankAccountSettingsForm = () => {
                     options={listTypes}
                     error={errors.typeId}
                 />
+                <StyledSelectField
+                    name="groupId"
+                    label="Группа"
+                    value={data.groupId}
+                    onChange={handleChange}
+                    defaultOption="Не выбрана..."
+                    options={listGroups}
+                    error={errors.groupId}
+                />
                 <StyledTextField
                     name="amount"
                     label="Текущая сумма на счету"
@@ -114,6 +131,10 @@ const BankAccountSettingsForm = () => {
             </form>
         </>
     )
+}
+
+BankAccountSettingsForm.propTypes = {
+    bankAccountId: PropTypes.string
 }
 
 export default BankAccountSettingsForm

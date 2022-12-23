@@ -9,7 +9,7 @@ const Modal = ({ children }) => {
         dispatch(setCurrentOpenModal(''))
     }
     return (
-        <div className={'fixed z-20 top-0 left-0 bottom-0 right-0 flex justify-center items-center bg-black/30'} onClick={handleClick}>
+        <div className={'fixed z-50 top-0 left-0 bottom-0 right-0 flex justify-center items-center bg-black/30'} onClick={handleClick}>
             <div className={'bg-white rounded-md w-96'} onClick={(e) => e.stopPropagation()}>
                 {children}
             </div>
