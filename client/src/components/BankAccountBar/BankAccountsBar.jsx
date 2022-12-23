@@ -5,6 +5,7 @@ import { getBankAccountsList, getBankAccountsLoadingStatus } from '../../store/b
 import { getBankAccountGroupsList, getBankAccountGroupsLoadingStatus } from '../../store/bankAccountGroupsSlice'
 import { setCurrentOpenModal } from '../../store/modalControllerSlice'
 import { PlusIcon } from '@heroicons/react/24/outline'
+import Tooltip from '@mui/material/Tooltip'
 import BankAccountsList from './bankAccountsList'
 
 const BankAccountsBar = () => {
@@ -65,18 +66,22 @@ const BankAccountsBar = () => {
                                     <BankAccountsList.Item key={ba._id} item={ba} onClick={handleClickBankAccount}/>
                                 ))
                             }
-                            <li className={'flex flex-col py-2 px-2 hover:bg-green-100 cursor-pointer h-24 w-full rounded-md shadow-xl bg-white'}
-                                onClick={() => dispatch(setCurrentOpenModal({ current: 'newBankAccount' }))}>
-                                <PlusIcon/>
-                            </li>
+                            <Tooltip title="Добавить новый счёт">
+                                <li className={'flex flex-col py-2 px-2 hover:bg-green-100 cursor-pointer h-24 w-full rounded-md shadow-xl bg-white'}
+                                    onClick={() => dispatch(setCurrentOpenModal({ current: 'newBankAccount', data: group._id }))}>
+                                    <PlusIcon/>
+                                </li>
+                            </Tooltip>
                         </BankAccountsList.Group>
                     ))
                 }
                 {!bankAccounts.length && !isLoading &&
-                    <li className={'flex flex-col py-2 px-2 hover:bg-green-100 cursor-pointer h-24 w-full rounded-md shadow-xl bg-white'}
-                        onClick={() => dispatch(setCurrentOpenModal({ current: 'newBankAccount' }))}>
-                        <PlusIcon/>
-                    </li>
+                    <Tooltip title="Добавить новый счёт">
+                        <li className={'flex flex-col py-2 px-2 hover:bg-green-100 cursor-pointer h-24 w-full rounded-md shadow-xl bg-white'}
+                            onClick={() => dispatch(setCurrentOpenModal({ current: 'newBankAccount' }))}>
+                            <PlusIcon/>
+                        </li>
+                    </Tooltip>
                 }
             </BankAccountsList>
         </div>

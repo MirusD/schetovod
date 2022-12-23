@@ -26,7 +26,7 @@ const SelectFieldWithBtn = (props) => {
                 error={error}
                 {...props}
             />
-            <div className="border rounded h-12 w-14 ml-2 bg-indigo-600 hover:bg-indigo-500">
+            <div className="border rounded h-12 w-14 ml-2 bg-indigo-600 hover:bg-indigo-500 items-end">
                 {children}
             </div>
         </div>

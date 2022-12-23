@@ -2,7 +2,9 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import transactionsService from '../services/transactions.service'
 import { setMessage } from './messageSlice'
 
-export const getTransactions = createAsyncThunk('transactions/get', async (_, thunkAPI) => {
+export const getTransactions = createAsyncThunk(
+    'transactions/get',
+    async (_, thunkAPI) => {
     try {
         const response = await transactionsService.get()
         return response
@@ -18,7 +20,9 @@ export const getTransactions = createAsyncThunk('transactions/get', async (_, th
     }
 })
 
-export const newTransaction = createAsyncThunk('transactions/create', async (payload, thunkAPI) => {
+export const newTransaction = createAsyncThunk(
+    'transactions/created',
+    async (payload, thunkAPI) => {
     try {
         const response = await transactionsService.create(payload)
         return response
@@ -33,6 +37,25 @@ export const newTransaction = createAsyncThunk('transactions/create', async (pay
         return thunkAPI.rejectWithValue()
     }
 })
+
+export const removeTransaction = createAsyncThunk(
+    'transaction/removed',
+    async (id, thunkAPI) => {
+        try {
+            await transactionsService.remove(id)
+            return { id }
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString()
+            thunkAPI.dispatch(setMessage(message))
+            return thunkAPI.rejectWithValue()
+        }
+    }
+)
 
 const initialState = {
     entities: [],
@@ -57,21 +80,23 @@ const transactionsSlice = createSlice({
         [newTransaction.fulfilled]: (state, action) => {
             if (!Array.isArray(state.entities)) state.entities = []
             state.entities.push(action.payload)
+            state.loading = 'succeeded'
         },
         [newTransaction.rejected]: (state) => {
             state.loading = 'failed'
         },
         [newTransaction.pending]: (state) => {
             state.loading = 'pending'
-        }
-    },
-    reducers: {
-        transactionUpdated: (state, action) => {
-            const updateTransactionIndex = state.entities.findIndex(el => el._id === action.payload._id)
-            state.entities[updateTransactionIndex] = { ...state.entities[updateTransactionIndex], ...action.payload }
         },
-        transactionRemoved: (state, action) => {
-            state.entities.filter(el => el._id !== action.payload._id)
+        [removeTransaction.fulfilled]: (state, action) => {
+            state.loading = 'succeeded'
+            state.entities = state.entities.filter(t => t._id !== action.payload.id)
+        },
+        [removeTransaction.rejected]: (state) => {
+            state.loading = 'failed'
+        },
+        [removeTransaction.pending]: (state) => {
+            state.loading = 'pending'
         }
     }
 })

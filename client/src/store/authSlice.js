@@ -8,7 +8,6 @@ export const signUp = createAsyncThunk(
     async (payload, thunkAPI) => {
         try {
             const response = await authService.register(payload)
-            console.log(response)
             const { userId, username, avatar, email } = response
             localStorageService.setTokens(response)
             return { userId, username, avatar, email }

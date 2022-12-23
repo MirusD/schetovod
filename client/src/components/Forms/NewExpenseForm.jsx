@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
-import StyledTextField from '../common/form/styled/StyledTextField'
 import { useDispatch, useSelector } from 'react-redux'
 import { addNewCategory, getCategoriesExpense } from '../../store/categoriesSlice'
-import { useParams } from 'react-router-dom'
 import { getBankAccountById, updateBankAccount } from '../../store/bankAccountsSlice'
 import { setCurrentOpenModal } from '../../store/modalControllerSlice'
 import { newTransaction } from '../../store/transactionsSlice'
-import validator from '../../utils/validator'
-import SelectFieldWithBtn from '../common/form/SelectFieldWithBtn'
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline'
+import StyledTextField from '../common/form/styled/StyledTextField'
+import validator from '../../utils/validator'
+import Tooltip from '@mui/material/Tooltip'
+import SelectFieldWithBtn from '../common/form/SelectFieldWithBtn'
+import PropTypes from 'prop-types'
 
-const NewExpenseForm = () => {
+const NewExpenseForm = ({ bankAccountId }) => {
     const initialState = {
         amount: '',
         category: '',
@@ -20,9 +21,8 @@ const NewExpenseForm = () => {
     const [data, setData] = useState(initialState)
     const [newCategory, setNewCategory] = useState(false)
     const dispatch = useDispatch()
-    const { bankAccountId } = useParams()
     const currentBankAccount = useSelector(getBankAccountById(bankAccountId))
-    const categories = useSelector(getCategoriesExpense())
+    const categories = useSelector(getCategoriesExpense()).filter(c => c.existing)
     const categoriesList = categories.map(category => ({ label: category.name, value: category._id }))
     const [errors, setErrors] = useState({})
 
@@ -130,12 +130,14 @@ const NewExpenseForm = () => {
                     error={errors.category}
                     disabled={newCategory}
                 >
-                    <button className="w-full h-full" onClick={handleEnabledFieldNewCategory}>
-                        {newCategory
-                            ? <MinusIcon className='text-white h-9 w-full'/>
-                            : <PlusIcon className='text-white h-9 w-full'/>
-                        }
-                    </button>
+                    <Tooltip title="Добавить новую категорию">
+                        <button className="w-full h-full" onClick={handleEnabledFieldNewCategory}>
+                            {newCategory
+                                ? <MinusIcon className='text-white h-9 w-full'/>
+                                : <PlusIcon className='text-white h-9 w-full'/>
+                            }
+                        </button>
+                    </Tooltip>
                 </SelectFieldWithBtn>
                 {newCategory &&
                     <StyledTextField
@@ -153,6 +155,10 @@ const NewExpenseForm = () => {
             </form>
         </>
     )
+}
+
+NewExpenseForm.propTypes = {
+    bankAccountId: PropTypes.string
 }
 
 export default NewExpenseForm

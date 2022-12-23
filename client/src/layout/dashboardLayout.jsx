@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import BankAccountsBar from '../components/BankAccountBar/BankAccountsBar'
-import Modals from '../components/Modals'
 import { getBankAccounts } from '../store/bankAccountsSlice'
-import { loadTypeBankAccountsList } from '../store/typeBankAccountsSlice'
+import { getBankAccountTypes } from '../store/typeBankAccountsSlice'
 import { loadCategoriesList } from '../store/categoriesSlice'
 import { useDispatch } from 'react-redux'
 import { getTransactions } from '../store/transactionsSlice'
@@ -14,7 +13,7 @@ const DashboardLayout = () => {
     useEffect(() => {
         dispatch(getBankAccounts())
         dispatch(getBankAccountGroups())
-        dispatch(loadTypeBankAccountsList())
+        dispatch(getBankAccountTypes())
         dispatch(loadCategoriesList())
         dispatch(getTransactions())
     }, [])
@@ -29,7 +28,6 @@ const DashboardLayout = () => {
             <div className="ml-4">
                 <Outlet/>
             </div>
-            <Modals/>
         </div>
     )
 }

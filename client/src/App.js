@@ -12,6 +12,11 @@ import GeneralStatus from './components/GeneralStatus'
 import BankAccountStatus from './components/BankAccountStatus'
 import SignUpPage from './pages/SingUpPage'
 import Profile from './pages/Profile'
+import CategoriesSettingsPage from './pages/CategoriesSettingsPage'
+import Modals from './components/Modals'
+import BankAccountsSettingsPage from './pages/BankAccountsSettingsPage'
+import withThemeProvider from './hoc/withThemeProvider'
+import SettingsLayout from './layout/SettingsLayout'
 
 function App() {
   return (
@@ -28,25 +33,28 @@ function App() {
                     <Route path="signup" element={<SignUpPage/>}/>
                     <Route path="*" element={<LoginPage/>}/>
                 </Route>
-                <Route path="profile" element={
-                    <ProtectedRoute redirect='/auth/login'>
-                        <Profile/>
-                    </ProtectedRoute>
-                }/>
-                <Route path="dashboard/bank-accounts/" element={
+                <Route path="dashboard/" element={
                     <ProtectedRoute redirect='/auth/login'>
                         <DashboardLayout/>
                     </ProtectedRoute>
                 }>
-                    <Route index element={<GeneralStatus/>}/>
-                    <Route path=":bankAccountId" element={<BankAccountStatus/>}/>
+                    <Route path="bank-accounts/" element={<GeneralStatus/>}/>
+                    <Route path="bank-accounts/:bankAccountId" element={<BankAccountStatus/>}/>
+                    <Route path="settings" element={
+                        <SettingsLayout/>
+                    }>
+                        <Route path="profile" element={<Profile/>}/>
+                        <Route path="categories" element={<CategoriesSettingsPage/>}/>
+                        <Route path="bank-accounts" element={<BankAccountsSettingsPage/>}/>
+                    </Route>
                 </Route>
                 <Route path="*" element={<Navigate to="/"/>}/>
             </Routes>
+            <Modals/>
         </main>
     </div>
   )
 }
 
-const AppWithStoreAndRoutes = withRedux(withRouter(App))
+const AppWithStoreAndRoutes = withRedux(withRouter(withThemeProvider(App)))
 export default AppWithStoreAndRoutes

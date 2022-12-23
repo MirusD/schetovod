@@ -1,8 +1,10 @@
 import React from 'react'
 import logo from '../logo.png'
 import { NavLink } from 'react-router-dom'
-
+import { getIsLoggedIn } from '../store/authSlice'
+import { useSelector } from 'react-redux'
 const HomePage = () => {
+    const isLoggedIn = useSelector(getIsLoggedIn())
     return (
         <div className="bg-gray-50 flex justify-center items-center grow">
             <div
@@ -23,12 +25,15 @@ const HomePage = () => {
                         знает где ваши деньги
                     </span>
                 </h1>
-                <div className="mt-5">
-                    <NavLink
-                        to="auth/login"
-                        className="px-5 py-3 rounded-md bg-green-600 text-white hover:bg-green-700 shadow"
-                    >Войти</NavLink>
-                </div>
+                {!isLoggedIn &&
+                    <div className="mt-5">
+                        <NavLink
+                            to="auth/login"
+                            className="px-5 py-3 rounded-md bg-green-600 text-white hover:bg-green-700 shadow"
+                        >Войти</NavLink>
+                    </div>
+
+                }
             </div>
         </div>
     )

@@ -21,7 +21,7 @@ export const getBankAccountGroups = createAsyncThunk(
 })
 
 export const createBankAccountGroup = createAsyncThunk(
-    'bankAccountGroups/create',
+    'bankAccountGroup/create',
     async (payload, thunkAPI) => {
     try {
         const data = await bankAccountGroupsService.create(payload)
@@ -37,6 +37,45 @@ export const createBankAccountGroup = createAsyncThunk(
         return thunkAPI.rejectWithValue()
     }
 })
+
+export const updateBankAccountGroup = createAsyncThunk(
+    'bankAccountGroup/update',
+    async ({ payload, groupId }, thunkAPI) => {
+        try {
+            const data = await bankAccountGroupsService.update(payload, groupId)
+            return data
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString()
+            thunkAPI.dispatch(setMessage(message))
+            return thunkAPI.rejectWithValue()
+        }
+    }
+)
+
+export const removeBankAccountGroup = createAsyncThunk(
+    'bankAccountGroup/removed',
+    async (id, thunkAPI) => {
+        try {
+            console.log(id)
+            // await bankAccountGroupsService.remove(id)
+            return { id }
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString()
+            thunkAPI.dispatch(setMessage(message))
+            return thunkAPI.rejectWithValue()
+        }
+    }
+)
 
 const initialState = {
     entities: [],
@@ -66,6 +105,27 @@ const bankAccountGroupsSlice = createSlice({
         },
         [createBankAccountGroup.pending]: (state) => {
             state.loading = 'pending'
+        },
+        [updateBankAccountGroup.fulfilled]: (state, action) => {
+            state.loading = 'succeeded'
+            const updateBankAccountGroupIndex = state.entities.findIndex(el => el._id === action.payload._id)
+            state.entities[updateBankAccountGroupIndex] = { ...state.entities[updateBankAccountGroupIndex], ...action.payload }
+        },
+        [updateBankAccountGroup.rejected]: (state) => {
+            state.loading = 'failed'
+        },
+        [updateBankAccountGroup.pending]: (state) => {
+            state.loading = 'pending'
+        },
+        [removeBankAccountGroup.fulfilled]: (state, action) => {
+            state.loading = 'succeeded'
+            state.entities = state.entities.map(ba => ba._id === action.payload.id ? { ...ba, existing: false, name: ba.name + ' (Удалена)' } : ba)
+        },
+        [removeBankAccountGroup.pending]: (state) => {
+            state.loading = 'pending'
+        },
+        [removeBankAccountGroup.rejected]: (state) => {
+            state.loading = 'failed'
         }
     }
 })

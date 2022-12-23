@@ -1,9 +1,12 @@
 import React from 'react'
-import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline'
+import Tooltip from '@mui/material/Tooltip'
+import { MinusIcon, PlusIcon, Cog6ToothIcon } from '@heroicons/react/24/outline'
 import { useParams } from 'react-router-dom'
 import { NumericFormat } from 'react-number-format'
+import { setCurrentOpenModal } from '../../store/modalControllerSlice'
 import card from '../../static/icons/bankAccountsIcons/credit-card.svg'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
 
 const BankAccountsList = ({ children }) => {
     return (
@@ -12,15 +15,34 @@ const BankAccountsList = ({ children }) => {
 }
 
 const BankAccountsListGroup = ({ name, children, id, isOpen, onClick }) => {
+    const dispatch = useDispatch()
     return (
         <div className="border-b pb-2 mb-2">
             <div className="flex justify-between items-center mb-3">
-                <span className="text-slate-500 text-gray-600 uppercase font-bold">{name}</span>
-                <button className="relative border border-gray-600 rounded-md text-2xl text-white font-bold h-7 w-7" onClick={() => onClick(id)}>
-                        <span className="absolute inset-1 text-gray-800">
-                            {isOpen ? <MinusIcon/> : <PlusIcon/>}
-                        </span>
-                </button>
+                <span
+                    className="text-slate-500 text-gray-600 uppercase font-bold"
+                >
+                    {name}
+                </span>
+                <div>
+                    <Tooltip title="Настройка группы">
+                        <button
+                            className="relative border border-gray-600 rounded-md text-2xl text-white font-bold h-7 w-7 mr-1"
+                            onClick={() => dispatch(setCurrentOpenModal({ current: 'groupEdit', data: id }))}
+                        >
+                            <span className="absolute inset-1 text-gray-800">
+                                <Cog6ToothIcon/>
+                            </span>
+                        </button>
+                    </Tooltip>
+                    <Tooltip title="Свернуть/Развернуть группу">
+                        <button className="relative border border-gray-600 rounded-md text-2xl text-white font-bold h-7 w-7" onClick={() => onClick(id)}>
+                            <span className="absolute inset-1 text-gray-800">
+                                {isOpen ? <MinusIcon/> : <PlusIcon/>}
+                            </span>
+                        </button>
+                    </Tooltip>
+                </div>
             </div>
             {isOpen && <>{children}</>}
         </div>
@@ -37,7 +59,7 @@ const BankAccountsListItem = ({ item, onClick }) => {
     return (
         <div className={classBankAccountItem} onClick={() => onClick(id)}>
             <div className="flex justify-between">
-                <img src={icon && card} className="h-9 w-9"/>
+                <img src={icon || card} className="h-9 w-9"/>
                 <span className="text-green-600 font-bold">
                     <NumericFormat
                         value={amount}

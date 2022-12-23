@@ -10,7 +10,8 @@ const SelectField = ({
     options,
     error,
     disabled,
-    selectClassName
+    selectClassName,
+    containerClassName
 }) => {
     const optionsArray =
         !Array.isArray(options) && typeof options === 'object'
@@ -20,7 +21,7 @@ const SelectField = ({
         onChange({ name: target.name, value: target.value })
     }
     return (
-        <div className="relative w-full">
+        <div className={'relative w-full ' + containerClassName}>
             <label className="mb-1 block">
                 {label}
             </label>
@@ -60,7 +61,8 @@ SelectField.propTypes = {
     options: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     name: PropTypes.string,
     disabled: PropTypes.bool,
-    selectClassName: PropTypes.string
+    selectClassName: PropTypes.string,
+    containerClassName: PropTypes.string
 }
 
 export default SelectField

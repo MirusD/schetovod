@@ -10,7 +10,7 @@ const StyledTextField = (props) => {
     return (
         <TextField
             {...props}
-            containerClassName="mb-5"
+            containerClassName="mb-4 mt-4"
             inputContainerClassName="relative text-slate-500"
             inputClassName={`w-full py-2 px-3 ${MainIcon ? 'sm:pl-12' : ''} rounded-md flex items-center h-12 shadow-sm focus:outline-none ring-1 ring-slate-900/10 focus:ring-2 focus:ring-green-600 hover:ring-slate-300`}
             labelClassName="block mb-1"

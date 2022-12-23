@@ -34,6 +34,25 @@ const NavBar = ({ className }) => {
                             Финансы
                         </StyledNavLink>
                     </li>
+                    <li>
+                        <Menu>
+                            <Menu.Button>
+                                Настройки
+                            </Menu.Button>
+                            <Menu.Items>
+                                <Menu.Item>
+                                    <NavLink to="dashboard/settings/categories">
+                                        Категории
+                                    </NavLink>
+                                </Menu.Item>
+                                <Menu.Item>
+                                    <NavLink to="dashboard/settings/bank-accounts">
+                                        Счета
+                                    </NavLink>
+                                </Menu.Item>
+                            </Menu.Items>
+                        </Menu>
+                    </li>
                     </>
                 )}
                 {isLoggedIn ? (
@@ -44,7 +63,7 @@ const NavBar = ({ className }) => {
                         </Menu.Button>
                         <Menu.Items>
                             <Menu.Item>
-                                <NavLink to="/profile">
+                                <NavLink to="dashboard/settings/profile">
                                     Профиль
                                 </NavLink>
                             </Menu.Item>
