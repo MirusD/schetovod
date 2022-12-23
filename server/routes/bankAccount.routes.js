@@ -53,7 +53,7 @@ router.delete('/:bankAccountId', auth, async (req, res) => {
         const bankAccount = await BankAccount.findById( bankAccountId )
 
         if (bankAccount.userId.toString() === req.user._id) {
-            await bankAccount.updateOne({ existing: false, name: bankAccount.name + ' (Закрыт)' })
+            await bankAccount.updateOne({ existing: false })
             return res.send(null)
         } else {
             res.status(401).json({ message: 'Ошибка при удалении счёта. Вы не авторизованы' })
